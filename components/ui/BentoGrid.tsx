@@ -47,7 +47,7 @@ export const BentoGridItem = ({
   spareImg?: string;
 }) => {
   const leftLists = ["ReactJS", "Express", "Typescript"];
-  const rightLists = ["VueJS", "NuxtJS", "GraphQL"];
+  const rightLists = ["VueJS", "NextJS", "GraphQL"];
 
   const [copied, setCopied] = useState(false);
 
@@ -116,7 +116,9 @@ export const BentoGridItem = ({
           <div className="font-sans font-extralight md:max-w-32 md:text-xs lg:text-base text-sm text-[#C1C2D3] z-10">
             {description}
           </div>
-          <div className={`font-sans text-lg lg:text-3xl max-w-96 font-bold z-10`}>
+          <div
+            className={`font-sans text-lg lg:text-3xl max-w-96 font-bold z-10`}
+          >
             {title}
           </div>
 
