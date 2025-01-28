@@ -1,4 +1,4 @@
-import dynamic from "next/dynamic";
+
 
 const MagicButton = ({
   title,
