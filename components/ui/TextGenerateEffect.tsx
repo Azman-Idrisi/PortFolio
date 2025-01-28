@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { motion, stagger, useAnimate } from "framer-motion";
 import { cn } from "@/utils/cn";
 
-
 export const TextGenerateEffect = ({
   words,
   className,
@@ -16,7 +15,7 @@ export const TextGenerateEffect = ({
   duration?: number;
 }) => {
   const [scope, animate] = useAnimate();
-  const wordsArray = words.split(" ");
+  let wordsArray = words.split(" ");
   useEffect(() => {
     animate(
       "span",
