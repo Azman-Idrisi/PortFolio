@@ -11,7 +11,13 @@ const Grid = dynamic(() => import("@/components/Grid"), { ssr: false });
 const RecentProjects = dynamic(() => import("@/components/RecentProjects"), {
   ssr: false,
 });
-const Clients = dynamic(() => import("@/components/Clients"), { ssr: false });
+const Experience = dynamic(() => import("@/components/Experience"), {
+  ssr: false,
+});
+const Approach = dynamic(() => import("@/components/Approach"), {
+  ssr: false,
+});
+
 
 export default function Home() {
   return (
@@ -21,7 +27,8 @@ export default function Home() {
         <Hero />
         <Grid />
         <RecentProjects />
-        <Clients />
+        <Experience />
+        <Approach />
       </div>
     </main>
   );
