@@ -78,7 +78,7 @@ export const projects = [
     des: "I Built a visually captivating website inspired by Zentry, featuring scroll-triggered animations, geometric transitions, and engaging video storytelling.",
     img: "/zentry.jpg",
     iconLists: ["/re.svg", "/tail.svg", "/vite.svg", "/gsap.svg"],
-    link: "/awards-peach.vercel.app",
+    link: "https://awards-peach.vercel.app",
   },
   {
     id: 2,
@@ -86,7 +86,7 @@ export const projects = [
     des: "Modern UI/UX website, developed using React.js and Tailwind CSS, exemplifies modern UI/UX principles.",
     img: "/brainwave.jpg",
     iconLists: ["/re.svg", "/tail.svg", "/vite.svg", "/gsap.svg"],
-    link: "/ui.yoom.com",
+    link: "https://brainwave-tau-two.vercel.app/",
   },
   {
     id: 3,
@@ -94,7 +94,7 @@ export const projects = [
     des: "Mastered Tailwind CSS in two parts by first learning fundamentals, advanced techniques, and theming. Then, build a stunning Nike landing page",
     img: "/nike.png",
     iconLists: ["/re.svg", "/tail.svg", "/vite.svg", "/gsap.svg"],
-    link: "/ui.aiimg.com",
+    link: "https://nike-weld-chi.vercel.app/",
   },
   {
     id: 4,
@@ -102,7 +102,7 @@ export const projects = [
     des: "Recreated the Apple iPhone 15 Pro website, combining GSAP animations and Three.js 3D effects..",
     img: "/p4.svg",
     iconLists: ["/re.svg", "/tail.svg", "/vite.svg", "/gsap.svg"],
-    link: "/ui.apple.com",
+    link: "https://apple-six-ecru.vercel.app/",
   },
 ];
 
@@ -207,13 +207,16 @@ export const socialMedia = [
   {
     id: 1,
     img: "/git.svg",
+    link: "https://github.com/Azman-Idrisi",
   },
   {
     id: 2,
-    img: "/twit.svg",
+    img: "/instagram.svg",
+    link: "https://www.instagram.com/idr_azman/",
   },
   {
     id: 3,
     img: "/link.svg",
+    link: "https://www.linkedin.com/in/azman-idrisi",
   },
 ];

@@ -2,7 +2,6 @@
 
 import dynamic from "next/dynamic";
 import { navItems } from "@/data";
-
 const FloatingNav = dynamic(() => import("@/components/ui/FloatingNav"), {
   ssr: false,
 });
@@ -14,7 +13,9 @@ const RecentProjects = dynamic(() => import("@/components/RecentProjects"), {
 const Experience = dynamic(() => import("@/components/Experience"), {
   ssr: false,
 });
-
+const Footer = dynamic(() => import("@/components/Footer"), {
+  ssr: false,
+});
 
 
 export default function Home() {
@@ -26,6 +27,7 @@ export default function Home() {
         <Grid />
         <RecentProjects />
         <Experience />  
+        <Footer />
       </div>
     </main>
   );
