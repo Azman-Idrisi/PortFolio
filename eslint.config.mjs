@@ -18,6 +18,9 @@ const eslintConfig = [
       "prefer-const": "warn", // Change 'prefer-const' to a warning
       "@typescript-eslint/no-explicit-any": "off", // Allow the use of 'any'
       "react-hooks/exhaustive-deps": "warn", // Change missing dependencies in useEffect to a warning
+      "@typescript-eslint/no-namespace": "off",
+      "@typescript-eslint/no-empty-interface": "off",
+      "@typescript-eslint/no-unused-vars": "warn",
     },
   },
 ];

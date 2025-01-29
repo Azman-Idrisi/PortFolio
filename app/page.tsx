@@ -14,9 +14,7 @@ const RecentProjects = dynamic(() => import("@/components/RecentProjects"), {
 const Experience = dynamic(() => import("@/components/Experience"), {
   ssr: false,
 });
-const Approach = dynamic(() => import("@/components/Approach"), {
-  ssr: false,
-});
+
 
 
 export default function Home() {
@@ -28,7 +26,6 @@ export default function Home() {
         <Grid />
         <RecentProjects />
         <Experience />
-        <Approach />
       </div>
     </main>
   );
