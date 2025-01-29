@@ -6,7 +6,7 @@ import { PinContainer } from "./ui/3d-pin";
 
 const RecentProjects = () => {
   return (
-    <div className="py-20">
+    <div className="py-20" id="projects">
       <h1 className="heading">
         A small selection of{" "}
         <span className="text-purple">recent projects</span>
@@ -17,10 +17,7 @@ const RecentProjects = () => {
             className="lg:min-h-[32.5rem] h-[25rem] flex items-center justify-center sm:w-96 w-[80vw]"
             key={item.id}
           >
-            <PinContainer
-              title={item.link}
-              href={item.link}
-            >
+            <PinContainer title={item.link} href={item.link}>
               {/* Container for project content */}
               <div className="flex flex-col">
                 {/* Project Image Section */}
