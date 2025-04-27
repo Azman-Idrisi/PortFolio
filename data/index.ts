@@ -1,4 +1,5 @@
 import { link } from "fs";
+let iter = 1;
 
 export const navItems = [
   { name: "About", link: "#about" },
@@ -73,7 +74,23 @@ export const gridItems = [
 
 export const projects = [
   {
-    id: 1,
+    id: iter,
+    title: "Personal Finance Tracker",
+    des: "A modern personal finance application built with Next.js that helps users track expenses, manage budgets.",
+    img: "/p5.png",
+    iconLists: ["/re.svg", "/tail.svg", "/next.png", "/node.png" , "/mongo.png"],
+    link: "https://yardstick-finance.vercel.app/",
+  },
+  {
+    id: iter = iter+1,
+    title: "Crypto Dashboard",
+    des: "A modern, responsive cryptocurrency dashboard that provides real-time market data and visualization for cryptocurrency assets.",
+    img: "/p6.png",
+    iconLists: ["/re.svg", "/tail.svg", "/redux.png", "/node.png"],
+    link: "https://xiv-tech-seven.vercel.app/",
+  },
+  {
+    id: iter =iter+1,
     title: "An Awwwards Winning Website Clone",
     des: "I Built a visually captivating website inspired by Zentry, featuring scroll-triggered animations, geometric transitions, and engaging video storytelling.",
     img: "/zentry.jpg",
@@ -81,7 +98,7 @@ export const projects = [
     link: "https://awards-peach.vercel.app",
   },
   {
-    id: 2,
+    id: iter = iter+1,
     title: "Brainwave - Modern UI/UX website",
     des: "Modern UI/UX website, developed using React.js and Tailwind CSS, exemplifies modern UI/UX principles.",
     img: "/brainwave.jpg",
@@ -89,7 +106,7 @@ export const projects = [
     link: "https://brainwave-tau-two.vercel.app/",
   },
   {
-    id: 3,
+    id: iter = iter+1,
     title: "Built a stunning Nike landing page,",
     des: "Mastered Tailwind CSS in two parts by first learning fundamentals, advanced techniques, and theming. Then, build a stunning Nike landing page",
     img: "/nike.png",
@@ -97,7 +114,7 @@ export const projects = [
     link: "https://nike-weld-chi.vercel.app/",
   },
   {
-    id: 4,
+    id: iter = iter+1,
     title: "Animated Apple Iphone 3D Website",
     des: "Recreated the Apple iPhone 15 Pro website, combining GSAP animations and Three.js 3D effects..",
     img: "/p4.svg",
