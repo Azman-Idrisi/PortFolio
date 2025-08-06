@@ -2,6 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom Local Fonts */
+@font-face {
+  font-family: 'MyCustomFont';
+  src: url('/fonts/MyCustomFont-Regular.woff2') format('woff2'),
+    url('/fonts/MyCustomFont-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'MyCustomFont';
+  src: url('/fonts/MyCustomFont-Bold.woff2') format('woff2'),
+    url('/fonts/MyCustomFont-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -69,12 +88,27 @@
 @layer base {
   * {
     @apply border-border !scroll-smooth;
+    cursor: none !important;
+    /* Hide default cursor globally */
   }
+
   body {
     @apply bg-background text-foreground;
+    cursor: none !important;
+    /* Ensure body has no cursor */
   }
+
   button {
     @apply active:outline-none;
+  }
+
+  /* Ensure interactive elements still have no cursor */
+  a,
+  button,
+  input,
+  textarea,
+  select {
+    cursor: none !important;
   }
 }
 

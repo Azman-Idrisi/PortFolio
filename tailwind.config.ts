@@ -26,6 +26,13 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        inter: ["var(--font-inter)", "sans-serif"],
+        poppins: ["var(--font-poppins)", "sans-serif"],
+        mono: ["var(--font-mono)", "monospace"],
+        custom: ["MyCustomFont", "sans-serif"],
+        silkscreen: ["var(--font-silkscreen)", "cursive"],
+      },
       colors: {
         black: {
           DEFAULT: "#000",

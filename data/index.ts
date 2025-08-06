@@ -4,7 +4,7 @@ let iter = 1;
 export const navItems = [
   { name: "About", link: "#about" },
   { name: "Projects", link: "#projects" },
-  { name: "Testimonials", link: "#testimonials" },
+  { name: "Experience", link: "#experience" },
   { name: "Contact", link: "#contact" },
 ];
 
@@ -78,11 +78,11 @@ export const projects = [
     title: "Personal Finance Tracker",
     des: "A modern personal finance application built with Next.js that helps users track expenses, manage budgets.",
     img: "/p5.png",
-    iconLists: ["/re.svg", "/tail.svg", "/next.png", "/node.png" , "/mongo.png"],
+    iconLists: ["/re.svg", "/tail.svg", "/next.png", "/node.png", "/mongo.png"],
     link: "https://yardstick-finance.vercel.app/",
   },
   {
-    id: iter = iter+1,
+    id: (iter = iter + 1),
     title: "Crypto Dashboard",
     des: "A modern, responsive cryptocurrency dashboard that provides real-time market data and visualization for cryptocurrency assets.",
     img: "/p6.png",
@@ -90,7 +90,7 @@ export const projects = [
     link: "https://xiv-tech-seven.vercel.app/",
   },
   {
-    id: iter =iter+1,
+    id: (iter = iter + 1),
     title: "An Awwwards Winning Website Clone",
     des: "I Built a visually captivating website inspired by Zentry, featuring scroll-triggered animations, geometric transitions, and engaging video storytelling.",
     img: "/zentry.jpg",
@@ -98,7 +98,7 @@ export const projects = [
     link: "https://awards-peach.vercel.app",
   },
   {
-    id: iter = iter+1,
+    id: (iter = iter + 1),
     title: "Brainwave - Modern UI/UX website",
     des: "Modern UI/UX website, developed using React.js and Tailwind CSS, exemplifies modern UI/UX principles.",
     img: "/brainwave.jpg",
@@ -106,7 +106,7 @@ export const projects = [
     link: "https://brainwave-tau-two.vercel.app/",
   },
   {
-    id: iter = iter+1,
+    id: (iter = iter + 1),
     title: "Built a stunning Nike landing page,",
     des: "Mastered Tailwind CSS in two parts by first learning fundamentals, advanced techniques, and theming. Then, build a stunning Nike landing page",
     img: "/nike.png",
@@ -114,7 +114,7 @@ export const projects = [
     link: "https://nike-weld-chi.vercel.app/",
   },
   {
-    id: iter = iter+1,
+    id: (iter = iter + 1),
     title: "Animated Apple Iphone 3D Website",
     des: "Recreated the Apple iPhone 15 Pro website, combining GSAP animations and Three.js 3D effects..",
     img: "/p4.svg",
@@ -192,31 +192,24 @@ export const companies = [
 export const workExperience = [
   {
     id: 1,
-    title: "Frontend Engineer Intern",
+    title: "Full Stack Developer Intern - Digital Guruji",
     desc: "Assisted in the development of a web-based platform using React.js, enhancing interactivity.",
     className: "md:col-span-2",
     thumbnail: "/exp1.svg",
   },
   {
     id: 2,
-    title: "Mobile App Dev - JSM Tech",
-    desc: "Designed and developed mobile app for both iOS & Android platforms using React Native.",
-    className: "md:col-span-2", // change to md:col-span-2
-    thumbnail: "/exp2.svg",
+    title: "Full Stack Developer - Connect SRM",
+    desc: "Developed and maintained user-facing features at Connect SRM .",
+    className: "md:col-span-2",
+    thumbnail: "/exp4.svg",
   },
   {
     id: 3,
-    title: "Freelance App Dev Project",
-    desc: "Led the dev of a mobile app for a client, from initial concept to deployment on app stores.",
-    className: "md:col-span-2", // change to md:col-span-2
-    thumbnail: "/exp3.svg",
-  },
-  {
-    id: 4,
-    title: "Lead Frontend Developer",
-    desc: "Developed and maintained user-facing features using modern frontend technologies.",
-    className: "md:col-span-2",
-    thumbnail: "/exp4.svg",
+    title: "Mobile App Developer",
+    desc: "Designed and developed mobile app for Android platforms using React Native.",
+    className: "", // change to md:col-span-2
+    thumbnail: "/exp2.svg",
   },
 ];
 
