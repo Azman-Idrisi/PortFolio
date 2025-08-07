@@ -1,10 +1,10 @@
 "use client";
 
-// import type { Metadata } from "next";
 import { Inter, Poppins, Roboto_Mono, Silkscreen } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./provider";
 import { FollowerPointerCard } from "@/components/ui/following-pointer";
+import Head from "next/head";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,18 +25,18 @@ const silkscreen = Silkscreen({
   variable: "--font-silkscreen",
 });
 
-// const metadata: Metadata = {
-//   title: "Azman's Portfolio",
-//   description: "Minimalist Love",
-// };
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <Head>
+        <link rel="icon" href="/favicon.ico" />
+        <title>Azman's Portfolio</title>
+        <meta name="description" content="Minimalist Love" />
+      </Head>
       <body
         className={`${inter.variable} ${poppins.variable} ${robotoMono.variable} ${silkscreen.variable} font-inter`}
       >

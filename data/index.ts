@@ -193,14 +193,14 @@ export const workExperience = [
   {
     id: 1,
     title: "Full Stack Developer Intern - Digital Guruji",
-    desc: "Assisted in the development of a web-based platform using React.js, enhancing interactivity.",
+    desc: "Assisted in the development of tools with external AI Integration collaborated with the team to manage, optimize custom web applications.",
     className: "md:col-span-2",
     thumbnail: "/exp1.svg",
   },
   {
     id: 2,
     title: "Full Stack Developer - Connect SRM",
-    desc: "Developed and maintained user-facing features at Connect SRM .",
+    desc: "Developed and maintained core features of Connect SRM student platform and app.",
     className: "md:col-span-2",
     thumbnail: "/exp4.svg",
   },
