@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { BentoGrid, BentoGridItem } from "./ui/BentoGrid";
 import { gridItems } from "@/data";
 import { useRevealAnimation } from "@/utils/useRevealAnimation";
-import { useRevealContext } from "@/app/page";
+import { useRevealContext } from "@/utils/RevealContext";
 
 const Grid = () => {
   const { shouldReveal } = useRevealContext();

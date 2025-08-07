@@ -5,7 +5,7 @@ import { workExperience } from "@/data";
 import React from "react";
 import { Button } from "./moving-border";
 import { useRevealAnimation } from "@/utils/useRevealAnimation";
-import { useRevealContext } from "@/app/page";
+import { useRevealContext } from "@/utils/RevealContext";
 
 const Experience = () => {
   const { shouldReveal } = useRevealContext();

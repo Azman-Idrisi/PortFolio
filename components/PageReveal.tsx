@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { useRevealContext } from "@/app/page";
+import { useRevealContext } from "@/utils/RevealContext";
 
 interface PageRevealProps {
   children: React.ReactNode;
@@ -60,7 +60,7 @@ const PageReveal = ({ children }: PageRevealProps) => {
 
       // Add some floating particles effect
       const createParticles = () => {
-        const particles = [];
+        const particles: HTMLDivElement[] = [];
         for (let i = 0; i < 8; i++) {
           const particle = document.createElement("div");
           particle.className = "reveal-particle";

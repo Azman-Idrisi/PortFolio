@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect, createContext, useContext } from "react";
+import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { navItems } from "@/data";
 import PageReveal from "@/components/PageReveal";
+import RevealContext from "@/utils/RevealContext";
 
 const FloatingNav = dynamic(() => import("@/components/ui/FloatingNav"), {
   ssr: false,
@@ -19,19 +20,6 @@ const Experience = dynamic(() => import("@/components/Experience"), {
 const Footer = dynamic(() => import("@/components/Footer"), {
   ssr: false,
 });
-
-// Create context for reveal animation coordination
-interface RevealContextType {
-  shouldReveal: boolean;
-  triggerReveal: () => void;
-}
-
-const RevealContext = createContext<RevealContextType>({
-  shouldReveal: false,
-  triggerReveal: () => {},
-});
-
-export const useRevealContext = () => useContext(RevealContext);
 
 export default function Home() {
   const [shouldReveal, setShouldReveal] = useState(false);

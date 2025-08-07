@@ -5,7 +5,7 @@ import { FaLocationArrow } from "react-icons/fa6";
 import { socialMedia } from "@/data";
 import MagicButton from "./ui/MagicButton";
 import { useRevealAnimation } from "@/utils/useRevealAnimation";
-import { useRevealContext } from "@/app/page";
+import { useRevealContext } from "@/utils/RevealContext";
 
 const Footer = () => {
   const { shouldReveal } = useRevealContext();

@@ -5,7 +5,7 @@ import { FaLocationArrow } from "react-icons/fa6";
 import { projects } from "@/data";
 import { PinContainer } from "./ui/3d-pin";
 import { useRevealAnimation } from "@/utils/useRevealAnimation";
-import { useRevealContext } from "@/app/page";
+import { useRevealContext } from "@/utils/RevealContext";
 
 const RecentProjects = () => {
   const { shouldReveal } = useRevealContext();

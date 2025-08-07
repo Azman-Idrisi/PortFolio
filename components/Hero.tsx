@@ -6,12 +6,12 @@ import { TextGenerateEffect } from "./ui/TextGenerateEffect";
 import MagicButton from "./ui/MagicButton";
 import { FaLocationArrow } from "react-icons/fa";
 import { useRevealAnimation } from "@/utils/useRevealAnimation";
-import { useRevealContext } from "@/app/page";
+import { useRevealContext } from "@/utils/RevealContext";
 import { gsap } from "gsap";
 
 const Hero = () => {
   const { shouldReveal } = useRevealContext();
-  const { elementRef, animateReveal } = useRevealAnimation({
+  const { elementRef } = useRevealAnimation({
     delay: 0.2,
     duration: 1.2,
     distance: 80,

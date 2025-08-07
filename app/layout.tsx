@@ -34,7 +34,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <Head>
         <link rel="icon" href="/favicon.ico" />
-        <title>Azman's Portfolio</title>
+        <title>Azman&apos;s Portfolio</title>
         <meta name="description" content="Minimalist Love" />
       </Head>
       <body
