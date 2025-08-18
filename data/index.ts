@@ -75,6 +75,14 @@ export const gridItems = [
 export const projects = [
   {
     id: iter,
+    title: "AI-powered Resume Analyzer",
+    des: "Build an AI-powered Resume Analyzer with React, React Router, and Puter.js! Implement seamless auth, upload and store resumes, and match candidates to jobs using smart AI evaluations.",
+    img: "/resum.png",
+    iconLists: ["/re.svg", "/tail.svg", "/vite.svg", "/router.svg","/typescript.svg"],
+    link: "https://resumix-analyze.vercel.app/",
+  },
+  {
+    id: (iter = iter + 1),
     title: "Personal Finance Tracker",
     des: "A modern personal finance application built with Next.js that helps users track expenses, manage budgets.",
     img: "/p5.png",
