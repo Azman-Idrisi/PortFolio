@@ -8,6 +8,7 @@ import { FaLocationArrow } from "react-icons/fa";
 import { useRevealAnimation } from "@/utils/useRevealAnimation";
 import { useRevealContext } from "@/utils/RevealContext";
 import { gsap } from "gsap";
+import Intro from "./Intro";
 
 const Hero = () => {
   const { shouldReveal } = useRevealContext();

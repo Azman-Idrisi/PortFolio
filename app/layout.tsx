@@ -5,7 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "./provider";
 import { FollowerPointerCard } from "@/components/ui/following-pointer";
 import Head from "next/head";
-
+import Intro from "@/components/Intro";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -50,6 +50,7 @@ export default function RootLayout({
             className="min-h-screen w-full"
             title="Azman's Portfolio"
           >
+            <Intro />
             {children}
           </FollowerPointerCard>
         </ThemeProvider>

@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 import { navItems } from "@/data";
 import PageReveal from "@/components/PageReveal";
 import RevealContext from "@/utils/RevealContext";
-
 const FloatingNav = dynamic(() => import("@/components/ui/FloatingNav"), {
   ssr: false,
 });

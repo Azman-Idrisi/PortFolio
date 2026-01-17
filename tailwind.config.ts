@@ -31,6 +31,7 @@ const config = {
         poppins: ["var(--font-poppins)", "sans-serif"],
         mono: ["var(--font-mono)", "monospace"],
         custom: ["MyCustomFont", "sans-serif"],
+        zentry: ["Zentry", "sans-serif"],
         silkscreen: ["var(--font-silkscreen)", "cursive"],
       },
       colors: {
