@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { Spotlight } from "./ui/Spotlight";
 import { TextGenerateEffect } from "./ui/TextGenerateEffect";
 import MagicButton from "./ui/MagicButton";
-import { FaLocationArrow } from "react-icons/fa";
+import { FaDownload, FaLocationArrow } from "react-icons/fa";
 import { useRevealAnimation } from "@/utils/useRevealAnimation";
 import { useRevealContext } from "@/utils/RevealContext";
 import { gsap } from "gsap";
@@ -119,6 +119,12 @@ const Hero = () => {
     }
   };
 
+  const handleDownloadCVClick = () => {
+    const resumeUrl =
+      "https://drive.google.com/file/d/1JCBAwEZqBxKEHkX7hc4rWE4Qhq4_8jEO/view?usp=sharing";
+    window.open(resumeUrl, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <div className="pb-20 pt-36" ref={elementRef as any}>
       <div>
@@ -153,6 +159,15 @@ const Hero = () => {
             <p className="text-center md:tracking-wider mb-4 text-sm md:text-lg lg:text-2xl">
               Hi, I&apos;m Azman.
             </p>
+          </div>
+
+          <div className="hero-button">
+            <MagicButton
+              title="Download CV"
+              icon={<FaDownload />}
+              position="right"
+              handleClick={handleDownloadCVClick}
+            />
           </div>
 
           <div className="hero-button">
