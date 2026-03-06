@@ -1,11 +1,8 @@
-"use client";
-
+import type { Metadata } from "next";
 import { Inter, Poppins, Roboto_Mono, Silkscreen } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "./provider";
-import { FollowerPointerCard } from "@/components/ui/following-pointer";
-import Head from "next/head";
-import Intro from "@/components/Intro";
+import ClientWrapper from "@/components/ClientWrapper";
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -25,6 +22,14 @@ const silkscreen = Silkscreen({
   variable: "--font-silkscreen",
 });
 
+export const metadata: Metadata = {
+  title: "Azman's Portfolio",
+  description: "Minimalist Love",
+  icons: {
+    icon: "/favicon.ico",
+  },
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -32,28 +37,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <Head>
-        <link rel="icon" href="/favicon.ico" />
-        <title>Azman&apos;s Portfolio</title>
-        <meta name="description" content="Minimalist Love" />
-      </Head>
       <body
         className={`${inter.variable} ${poppins.variable} ${robotoMono.variable} ${silkscreen.variable} font-inter`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <FollowerPointerCard
-            className="min-h-screen w-full"
-            title="Azman's Portfolio"
-          >
-            <Intro />
-            {children}
-          </FollowerPointerCard>
-        </ThemeProvider>
+        <ClientWrapper>{children}</ClientWrapper>
       </body>
     </html>
   );

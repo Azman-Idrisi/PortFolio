@@ -1,12 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { IoCopyOutline } from "react-icons/io5";
 import Lottie from "react-lottie";
 import { cn } from "@/utils/cn";
 import { BackgroundGradientAnimation } from "./GradientBg";
 import animationData from "@/data/confetti.json";
 import MagicButton from "./MagicButton";
+
+const defaultOptions = {
+  loop: false,
+  autoplay: true,
+  animationData: animationData,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
 
 export const BentoGrid = ({
   className,
@@ -51,15 +61,6 @@ export const BentoGridItem = ({
 
   const [copied, setCopied] = useState(false);
 
-  const defaultOptions = {
-    loop: copied,
-    autoplay: copied,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
-
   const handleCopy = () => {
     const text = "idrisiazman@gmail.com";
     navigator.clipboard.writeText(text);
@@ -81,9 +82,12 @@ export const BentoGridItem = ({
       <div className={`${id === 6 && "flex justify-center"} h-full`}>
         <div className="w-full h-full absolute">
           {img && (
-            <img
+            <Image
               src={img}
               alt={img}
+              width={500}
+              height={500}
+              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className={cn(imgClassName, "object-cover object-center ")}
             />
           )}
@@ -94,9 +98,12 @@ export const BentoGridItem = ({
           } `}
         >
           {spareImg && (
-            <img
+            <Image
               src={spareImg}
               alt={spareImg}
+              width={500}
+              height={500}
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover object-center w-full h-full"
             />
           )}
@@ -154,13 +161,11 @@ export const BentoGridItem = ({
           )}
           {id === 6 && (
             <div className="mt-5 relative">
-              <div
-                className={`absolute -bottom-5 right-0 ${
-                  copied ? "block" : "block"
-                }`}
-              >
-                <Lottie options={defaultOptions} height={200} width={400} />
-              </div>
+              {copied && (
+                <div className="absolute -bottom-5 right-0">
+                  <Lottie options={defaultOptions} height={200} width={400} />
+                </div>
+              )}
 
               <MagicButton
                 title={copied ? "Email is Copied!" : "Copy my email address"}
