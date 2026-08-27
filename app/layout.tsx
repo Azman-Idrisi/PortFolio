@@ -1,46 +1,106 @@
-import type { Metadata } from "next";
-import { Inter, Poppins, Roboto_Mono, Silkscreen } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Inter, JetBrains_Mono, Fraunces } from "next/font/google";
+import localFont from "next/font/local";
+import { Suspense } from "react";
 import "./globals.css";
-import ClientWrapper from "@/components/ClientWrapper";
+import { SmoothScroll } from "@/components/SmoothScroll";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
 });
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-poppins",
-});
-const robotoMono = Roboto_Mono({
+
+const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
+  display: "swap",
 });
-const silkscreen = Silkscreen({
+
+const fraunces = Fraunces({
   subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-silkscreen",
+  variable: "--font-fraunces",
+  display: "swap",
+  axes: ["opsz"],
+});
+
+const zentry = localFont({
+  src: "../public/fonts/zentry-regular.woff2",
+  variable: "--font-zentry",
+  display: "swap",
+  weight: "400",
+  style: "normal",
 });
 
 export const metadata: Metadata = {
-  title: "Azman's Portfolio",
-  description: "Minimalist Love",
+  metadataBase: new URL("https://idrazman.in"),
+  title: {
+    default: "Mohammad Azman — React Native & Full-Stack Developer",
+    template: "%s — Mohammad Azman",
+  },
+  description:
+    "React Native developer with 2+ years building and shipping cross-platform mobile apps to Google Play. Connect SRM, WalletMate, SRM OLMS, and more.",
+  applicationName: "Mohammad Azman",
+  keywords: [
+    "Mohammad Azman",
+    "React Native Developer",
+    "Full-Stack Developer",
+    "Mobile App Developer",
+    "Next.js",
+    "TypeScript",
+    "Node.js",
+    "Portfolio",
+  ],
+  authors: [{ name: "Mohammad Azman", url: "https://idrazman.in" }],
+  creator: "Mohammad Azman",
+  publisher: "Mohammad Azman",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    url: "https://idrazman.in",
+    siteName: "Mohammad Azman",
+    title: "Mohammad Azman — React Native & Full-Stack Developer",
+    description:
+      "React Native developer with 2+ years building and shipping cross-platform mobile apps to Google Play.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Mohammad Azman — React Native & Full-Stack Developer",
+    description:
+      "React Native developer with 2+ years building and shipping cross-platform mobile apps to Google Play.",
+  },
+  robots: { index: true, follow: true },
   icons: {
     icon: "/favicon.ico",
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#0A0A0B",
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.variable} ${poppins.variable} ${robotoMono.variable} ${silkscreen.variable} font-inter`}
-      >
-        <ClientWrapper>{children}</ClientWrapper>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${inter.variable} ${jetbrains.variable} ${fraunces.variable} ${zentry.variable}`}
+    >
+      <body className="bg-ink text-paper font-sans antialiased">
+        <a
+          href="#top"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[99999] focus:bg-paper focus:text-ink focus:px-3 focus:py-2 focus:text-sm"
+        >
+          Skip to content
+        </a>
+        <Suspense fallback={null}>
+          <SmoothScroll>{children}</SmoothScroll>
+        </Suspense>
       </body>
     </html>
   );

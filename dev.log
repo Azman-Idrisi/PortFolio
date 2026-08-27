@@ -1,0 +1,14 @@
+
+> portfolio_2@0.1.0 dev
+> next dev
+
+▲ Next.js 16.3.3 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.1.0.103:3000
+✓ Ready in 595ms
+✓ Running next.config.ts took 47ms
+
+ GET /?project=walletmate 200 in 891ms (next.js: 535ms, application-code: 356ms)
+ GET / 200 in 55ms (next.js: 8ms, application-code: 47ms)
+ GET /?project=driver 200 in 50ms (next.js: 6ms, application-code: 45ms)
+ GET /?project=walletmate 200 in 49ms (next.js: 6ms, application-code: 43ms)
