@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 /* Custom Local Fonts */
 @font-face {
@@ -28,6 +26,42 @@
   font-style: normal;
   font-display: swap;
   font-feature-settings: "ss01" on;
+}
+
+@theme {
+  --color-black-100: #000319;
+  --color-black-200: rgba(17, 25, 40, 0.75);
+  --color-black-300: rgba(255, 255, 255, 0.125);
+  --color-white-100: #BEC1DD;
+  --color-white-200: #C1C2D3;
+  --color-blue-100: #E4ECFF;
+  --color-purple: #CBACF9;
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --radius: 0.5rem;
+  --font-inter: var(--font-inter);
+  --font-poppins: var(--font-poppins);
+  --font-mono: var(--font-mono);
+  --font-silkscreen: var(--font-silkscreen);
+  --font-custom: MyCustomFont, sans-serif;
+  --font-zentry: Zentry, sans-serif;
 }
 
 @layer base {

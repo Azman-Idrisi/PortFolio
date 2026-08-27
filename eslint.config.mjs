@@ -1,28 +1,24 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import nextPlugin from "@next/eslint-plugin-next";
+import tseslint from "typescript-eslint";
+import reactHooks from "eslint-plugin-react-hooks";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+export default tseslint.config(
+  { ignores: [".next/", "node_modules/"] },
+  nextPlugin.configs.recommended,
+  nextPlugin.configs["core-web-vitals"],
+  ...tseslint.configs.recommended,
   {
+    plugins: {
+      "react-hooks": reactHooks,
+    },
     rules: {
-      "@typescript-eslint/no-unused-vars": "warn", // Change to a warning instead of an error
-      "@next/next/no-img-element": "off", // Disable <img> element warnings
-      "prefer-const": "warn", // Change 'prefer-const' to a warning
-      "@typescript-eslint/no-explicit-any": "off", // Allow the use of 'any'
-      "react-hooks/exhaustive-deps": "warn", // Change missing dependencies in useEffect to a warning
+      "@typescript-eslint/no-unused-vars": "warn",
+      "@next/next/no-img-element": "off",
+      "prefer-const": "warn",
+      "@typescript-eslint/no-explicit-any": "off",
+      "react-hooks/exhaustive-deps": "warn",
       "@typescript-eslint/no-namespace": "off",
       "@typescript-eslint/no-empty-interface": "off",
-      "@typescript-eslint/no-unused-vars": "warn",
     },
-  },
-];
-
-export default eslintConfig;
+  }
+);
