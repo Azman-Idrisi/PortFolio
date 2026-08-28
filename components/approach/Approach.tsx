@@ -246,13 +246,11 @@ export function Approach() {
                   i === approachStages.length - 1 ? "md:border-b-0" : ""
                 }`}
               >
-                <div
-                  className="approach-index md:col-span-2 font-mono text-[12px] uppercase tracking-[0.18em] text-accent will-change-[clip-path]"
-                >
+                <div className="approach-index md:col-span-2 md:flex md:items-center font-mono text-[12px] uppercase tracking-[0.18em] text-accent will-change-[clip-path]">
                   {s.index}
                 </div>
 
-                <h3 className="approach-row-title md:col-span-3 font-fraunces text-[28px] md:text-[36px] leading-[1.05] text-paper font-light tracking-[-0.02em] overflow-hidden">
+                <h3 className="approach-row-title md:col-span-3 md:flex md:items-center font-fraunces text-[28px] md:text-[36px] leading-[1.05] text-paper font-light tracking-[-0.02em] overflow-hidden">
                   <span className="block">
                     {titleWords.map(({ seg, isSpace, key }) =>
                       isSpace ? (
@@ -272,7 +270,7 @@ export function Approach() {
                 </h3>
 
                 <p
-                  className={`approach-body ${
+                  className={`approach-body md:flex md:items-center ${
                     s.tools
                       ? "md:col-span-5 text-[15px] md:text-[16px] leading-[1.55] text-paper-2 font-fraunces font-light max-w-[48ch]"
                       : "md:col-span-7 text-[15px] md:text-[16px] leading-[1.55] text-paper-2 font-fraunces font-light max-w-[48ch]"
@@ -282,7 +280,7 @@ export function Approach() {
                 </p>
 
                 {s.tools && (
-                  <div className="approach-tools md:col-span-2 md:flex md:justify-end">
+                  <div className="approach-tools md:col-span-2 md:flex md:items-center md:justify-end">
                     <ul className="flex flex-wrap gap-2 md:justify-end">
                       {s.tools.slice(0, 3).map((t) => (
                         <li

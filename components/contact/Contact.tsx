@@ -127,7 +127,7 @@ export function Contact() {
         </div>
 
         <div className="mt-24 md:mt-32 pt-8 border-t border-line w-full flex flex-col md:flex-row items-center justify-between gap-4 text-[12px] font-mono uppercase tracking-[0.14em] text-paper-2">
-          <span>© 2026 Mohammad Azman</span>
+          <CurrentMood />
           <a
             href={resumeUrl}
             target="_blank"
@@ -141,5 +141,39 @@ export function Contact() {
         </div>
       </div>
     </section>
+  );
+}
+
+function CurrentMood() {
+  return (
+    <span className="relative group inline-block">
+      <span className="cursor-pointer transition-colors group-hover:text-paper">
+        © 2026 Mohammad Azman
+      </span>
+      <span
+        aria-hidden
+        className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-44"
+      >
+        <span className="relative block opacity-0 translate-y-1 scale-[0.97] group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 transition-[opacity,transform] duration-300 ease-out">
+          <span className="block overflow-hidden rounded-md border border-line bg-ink-2 p-2 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
+            <span className="block aspect-square w-full overflow-hidden rounded-sm bg-ink-3">
+              <img
+                src="/ghee/ghee.webp"
+                alt="Current mood"
+                className="h-full w-full object-cover"
+                loading="lazy"
+                onError={(e) => {
+                  (e.currentTarget.style.display = "none");
+                }}
+              />
+            </span>
+            <span className="mt-2 block text-center text-[10px] font-mono uppercase tracking-[0.18em] text-paper-2">
+              Current mood
+            </span>
+          </span>
+          <span className="absolute left-1/2 -bottom-1 h-2 w-2 -translate-x-1/2 rotate-45 border-b border-r border-line bg-ink-2" />
+        </span>
+      </span>
+    </span>
   );
 }

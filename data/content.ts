@@ -9,7 +9,7 @@ export const navItems = [
 ];
 
 export const aboutParagraph =
-  "I'm Mohammad — a React Native and full-stack developer with 2+ years building and shipping cross-platform apps to Google Play. I work across the stack, from the interfaces people touch to the APIs and databases behind them. I care about the details that make software feel finished.";
+  "I'm Azman — a React Native and full-stack developer with 2+ years building and shipping cross-platform apps to Google Play. I work across the stack, from the interfaces people touch to the APIs and databases behind them. I care about the details that make software feel finished.";
 
 export const aboutIdentity = [
   { label: "Role", value: "React Native & full-stack developer" },
@@ -22,7 +22,7 @@ export const aboutIdentity = [
     label: "Education",
     value: "B.Tech CSE · SRM IST — GPA 8.8 · Class of 2027",
   },
-  { label: "Status", value: "Open to internships — 2026" },
+  { label: "Status", value: "Open to internships/Job — 2026" },
 ];
 
 export const techPanels = [
