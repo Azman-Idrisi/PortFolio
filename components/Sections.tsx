@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { SectionsErrorBoundary } from "@/components/SectionsErrorBoundary";
 
 const About = dynamic(() => import("@/components/about/About").then((m) => m.About), {
   ssr: false,
@@ -36,7 +37,7 @@ const Contact = dynamic(
 
 export function Sections() {
   return (
-    <>
+    <SectionsErrorBoundary>
       <About />
       <ProjectArchive />
       <TechStack />
@@ -45,6 +46,6 @@ export function Sections() {
       <EngineeringDNA />
       <Experience />
       <Contact />
-    </>
+    </SectionsErrorBoundary>
   );
 }

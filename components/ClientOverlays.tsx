@@ -1,16 +1,20 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Preloader } from "@/components/intro/Preloader";
 
-const Cursor = dynamic(() => import("@/components/cursor/Cursor").then((m) => m.Cursor), {
-  ssr: false,
-});
+const Cursor = dynamic(
+  () => import("@/components/cursor/Cursor").then((m) => m.Cursor),
+  { ssr: false }
+);
+const LandingIntro = dynamic(
+  () => import("@/components/landing/LandingIntro").then((m) => m.LandingIntro),
+  { ssr: false }
+);
 
 export function ClientOverlays() {
   return (
     <>
-      <Preloader />
+      <LandingIntro />
       <Cursor />
     </>
   );

@@ -9,27 +9,27 @@ Next.js 16 (App Router) + React 19 + TypeScript portfolio for **Mohammad Azman**
 - `npm run start` — run production build
 - `npm run lint` — `npx eslint .` (lint script `next lint` is broken in Next 16; use eslint directly)
 - `npx eslint .` — preferred way to run lint
-- `npm run gen:azman` — regenerate `lib/azman-paths.ts` from `scripts/fraunces-regular.ttf` (only if font changes; output is committed)
 
 ## Architecture Notes
 - **Entry point**: `app/page.tsx` is a server component. It composes:
-  - `<ClientOverlays />` (Preloader + Cursor) and `<Nav />` rendered directly
+  - `<ClientOverlays />` (`<LandingIntro />` + `<Cursor />`, lazy) and `<Nav />` rendered directly
   - `<Hero />` rendered directly (client component, but small enough to ship)
   - `<Sections />` (client) dynamically-imports `About`, `ProjectArchive`, `TechStack`, `Experience`, `Contact` with `ssr: false`
 - **SmoothScroll**: `app/layout.tsx` wraps children in `<SmoothScroll>` which calls `useSmoothScroll` — initializes Lenis + GSAP ScrollTrigger sync, gated by `prefers-reduced-motion`.
 - **Fonts**: `next/font/google` for Fraunces (variable, opsz axis), Inter, JetBrains Mono. `next/font/local` for Zentry (`public/fonts/zentry-regular.woff2`).
 - **Path alias**: `@/*` → `./*`
-- **Dark-only theme** — no theme provider. CSS variables in `app/globals.css` `@theme` block.
+- **Dark-only theme** — no theme provider. CSS variables in `app/globals.css` `@theme` block. The yellow landing intro is a fully-namespaced exception (`.landing-*` block in `globals.css`); it does not use the ink/paper tokens.
+- **Landing intro**: a full-viewport fixed yellow overlay (`<LandingIntro />`) sits at z=250 on top of the existing portfolio and runs a 13.2s GSAP sequence (odometer + 7-image clip-path reveal + zoom + nav drop + headline rise + fade-out). It plays on every page load (no sessionStorage gate). Below it, the existing dark portfolio renders and animates normally.
 
 ## File Tree (key paths)
 ```
 app/
   layout.tsx          fonts, metadata, viewport, SmoothScroll wrapper
   page.tsx            composition (server)
-  globals.css         Tailwind v4 @theme tokens (ink/paper/accent)
+  globals.css         Tailwind v4 @theme tokens (ink/paper/accent) + .landing-* block
   opengraph-image.tsx (not yet created — TODO)
 components/
-  ClientOverlays.tsx  Preloader + Cursor (client, lazy)
+  ClientOverlays.tsx  LandingIntro + Cursor (client, lazy)
   Sections.tsx        dynamic-imports all major sections
   SmoothScroll.tsx    calls useSmoothScroll
   nav/                Nav.tsx, MobileMenu.tsx
@@ -40,8 +40,7 @@ components/
   experience/Experience.tsx
   contact/Contact.tsx
   cursor/Cursor.tsx
-  intro/Preloader.tsx       full-screen branded "AZMAN" preloader (GSAP timeline + Lenis lock)
-  intro/AzmanWordmark.tsx   inline SVG of Fraunces "AZMAN" glyphs, drawn via stroke-dasharray
+  landing/LandingIntro.tsx  yellow 13.2s landing overlay (odometer + photos + nav + headline)
   primitives/         Button.tsx, Tag.tsx, Meta.tsx, Divider.tsx, SectionLabel.tsx, Marquee.tsx, RevealText.tsx, SocialIcon.tsx
 hooks/
   useSmoothScroll.ts  Lenis + GSAP integration
@@ -53,7 +52,6 @@ hooks/
 lib/
   lenis.ts            Lenis singleton
   motion.ts           easing + duration presets
-  azman-paths.ts      AUTO-GENERATED Fraunces glyph outlines for the preloader (do not edit)
 data/
   projects.ts         12 projects (7 verified, 5 repo-only)
   socials.ts          typed social links
@@ -62,9 +60,6 @@ data/
 public/
   fonts/              zentry-regular.woff2 (only)
   assets/projects/    EMPTY — drop <slug>.webp files here for each project
-scripts/
-  fraunces-regular.ttf        Fraunces144pt-Regular, dev-only (build-time input for gen:azman)
-  generate-azman-paths.mjs    regenerates lib/azman-paths.ts using opentype.js (devDep)
 ```
 
 ## Key Conventions
@@ -91,8 +86,9 @@ scripts/
 - **Fraunces** must use `weight` omitted (variable font with `axes: ["opsz"]`) — specifying both `weight` array and `axes` causes a build error.
 - **Lenis + GSAP** integration requires `gsap.ticker.add((t) => lenis.raf(t * 1000))` and `gsap.ticker.lagSmoothing(0)`. ScrollTrigger also needs `lenis.on("scroll", ScrollTrigger.update)`.
 - **Cursor** is gated by `useMedia("(pointer: fine)")` and `useReducedMotion`. Hidden on touch.
-- **Reduced motion**: `useSmoothScroll` no-ops, TechStack falls back to vertical stack, Preloader shows 0s, drawer uses 150ms fade, no auto-open of WalletMate.
-- **Preloader ↔ Hero handoff**: The Preloader owns the first paint and dispatches the `azman:preloader-done` window event (and sets `document.documentElement.dataset.preloaderDone = "true"`) on completion. The Hero intro timeline waits for this event (or the dataset flag) before starting. Reduced-motion users skip the wait.
+- **Reduced motion**: `useSmoothScroll` no-ops, TechStack falls back to vertical stack, LandingIntro unmounts immediately (skips the 13.2s sequence), drawer uses 150ms fade, no auto-open of WalletMate.
+- **LandingIntro z-index**: 250 — sits above the existing `<Nav />` (z=200) and `<Cursor />` (z=200) so the yellow overlay is the only thing visible during the intro. The existing `<Nav />` is `position: fixed` and lives behind the landing during the intro; once the landing fades, it is on top of the page content normally.
+- **LandingIntro React 19 StrictMode safety**: all `.digit-3` nums and the headline character spans are rendered in JSX (no `appendChild` or `innerHTML` rewrite in the effect). All GSAP selectors are scoped via `gsap.context(rootRef)` and undone by `ctx.revert()` on cleanup. Image pre-load has a 1s timeout fallback.
 - **No test suite** configured.
 
 ## Pending / TODO

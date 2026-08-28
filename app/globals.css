@@ -105,6 +105,173 @@
   }
 }
 
+@layer components {
+  .landing-hero {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #ebdc0b;
+    z-index: 250;
+    overflow: hidden;
+    padding: 3em;
+    transform-origin: center center;
+    will-change: transform, opacity;
+  }
+
+  .landing-hero .landing-pre-loader {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 200%;
+    height: 100%;
+    padding: 2em;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    gap: 0.5em;
+    overflow: hidden;
+    z-index: 2;
+  }
+
+  .landing-hero .landing-pre-loader p {
+    width: max-content;
+    text-transform: uppercase;
+    font-family: var(--font-zentry), Georgia, serif;
+    font-size: 60px;
+    line-height: 60px;
+  }
+
+  .landing-hero .landing-counter {
+    height: 100px;
+    display: flex;
+    font-family: var(--font-zentry), Georgia, serif;
+    font-size: 100px;
+    font-weight: 400;
+    line-height: 150px;
+    clip-path: polygon(0 0, 100% 0, 100% 100px, 0 100px);
+  }
+
+  .landing-hero .landing-digit-1,
+  .landing-hero .landing-digit-2,
+  .landing-hero .landing-digit-3,
+  .landing-hero .landing-digit-4 {
+    position: relative;
+    top: -15px;
+  }
+
+  .landing-hero .num.offset {
+    position: relative;
+    right: -7.5px;
+  }
+
+  .landing-hero .landing-progress-bar {
+    position: relative;
+    top: -15px;
+    width: 0%;
+    height: 4px;
+    background: #000;
+  }
+
+  .landing-hero .landing-hero-imgs {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .landing-hero .landing-hero-imgs > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%);
+  }
+
+  .landing-hero .website-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .landing-hero .landing-nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    padding: 2em;
+    pointer-events: auto;
+  }
+
+  .landing-hero .landing-nav > div {
+    flex: 1;
+    font-family: var(--font-zentry), Georgia, serif;
+    font-size: 36px;
+    font-weight: lighter;
+    color: #ebdc0b;
+    text-transform: uppercase;
+  }
+
+  .landing-hero .landing-nav .site-info {
+    text-align: center;
+  }
+
+  .landing-hero .landing-nav .menu {
+    text-align: right;
+  }
+
+  .landing-hero .header {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .landing-hero .landing-h1 {
+    text-transform: uppercase;
+    font-family: var(--font-inter), system-ui, sans-serif;
+    font-weight: 200;
+    color: #ebdc0b;
+    font-size: clamp(120px, 18vw, 360px);
+    line-height: 1;
+    white-space: nowrap;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    margin: 0;
+  }
+
+  .landing-hero .landing-h1 .h1-char {
+    position: relative;
+    top: 400px;
+    display: inline-block;
+  }
+
+  .landing-hero .landing-h1 .h1-space {
+    width: 0.3em;
+  }
+
+  @media (max-width: 900px) {
+    .landing-hero .landing-pre-loader {
+      padding: 1em;
+    }
+    .landing-hero .landing-counter {
+      font-size: 70px;
+    }
+    .landing-hero .landing-pre-loader p {
+      font-size: 40px;
+      line-height: 64px;
+    }
+    .landing-hero .num.offset {
+      right: -5px;
+    }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

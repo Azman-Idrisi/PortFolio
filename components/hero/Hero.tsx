@@ -30,57 +30,43 @@ export function Hero() {
       return;
     }
 
-    const start = () => {
-      const tl = gsap.timeline();
+    const tl = gsap.timeline({ delay: 0.2 });
 
-      tl.fromTo(
-        "[data-hero-anim='label']",
-        { opacity: 0, y: 12 },
-        { opacity: 1, y: 0, duration: 0.7, ease: "expo.out" }
+    tl.fromTo(
+      "[data-hero-anim='label']",
+      { opacity: 0, y: 12 },
+      { opacity: 1, y: 0, duration: 0.7, ease: "expo.out" }
+    )
+      .fromTo(
+        "[data-hero-anim='name-1']",
+        { yPercent: 110, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 1, ease: "expo.out" },
+        "-=0.5"
       )
-        .fromTo(
-          "[data-hero-anim='name-1']",
-          { yPercent: 110, opacity: 0 },
-          { yPercent: 0, opacity: 1, duration: 1, ease: "expo.out" },
-          "-=0.5"
-        )
-        .fromTo(
-          "[data-hero-anim='name-2']",
-          { yPercent: 110, opacity: 0 },
-          { yPercent: 0, opacity: 1, duration: 1, ease: "expo.out" },
-          "-=0.85"
-        )
-        .fromTo(
-          "[data-hero-anim='tagline']",
-          { opacity: 0, y: 16 },
-          { opacity: 1, y: 0, duration: 0.7, ease: "expo.out" },
-          "-=0.6"
-        )
-        .fromTo(
-          "[data-hero-anim='sub']",
-          { opacity: 0, y: 12 },
-          { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" },
-          "-=0.55"
-        )
-        .fromTo(
-          "[data-hero-anim='meta']",
-          { opacity: 0, y: 8 },
-          { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" },
-          "-=0.4"
-        );
-
-      return tl;
-    };
-
-    let tl: gsap.core.Timeline | null = null;
-    if (document.documentElement.dataset.preloaderDone === "true") {
-      tl = start();
-    } else {
-      const onDone = () => {
-        tl = start();
-      };
-      window.addEventListener("azman:preloader-done", onDone, { once: true });
-    }
+      .fromTo(
+        "[data-hero-anim='name-2']",
+        { yPercent: 110, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 1, ease: "expo.out" },
+        "-=0.85"
+      )
+      .fromTo(
+        "[data-hero-anim='tagline']",
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.7, ease: "expo.out" },
+        "-=0.6"
+      )
+      .fromTo(
+        "[data-hero-anim='sub']",
+        { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" },
+        "-=0.55"
+      )
+      .fromTo(
+        "[data-hero-anim='meta']",
+        { opacity: 0, y: 8 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" },
+        "-=0.4"
+      );
 
     if (taglineRef.current) {
       ScrollTrigger.create({
@@ -96,7 +82,7 @@ export function Hero() {
     }
 
     return () => {
-      tl?.kill();
+      tl.kill();
     };
   }, [reduced]);
 
