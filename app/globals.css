@@ -111,11 +111,13 @@
     inset: 0;
     width: 100vw;
     height: 100vh;
-    background: #ebdc0b;
+    background: var(--color-paper);
+    color: var(--color-ink);
     z-index: 250;
     overflow: hidden;
     padding: 3em;
     transform-origin: center center;
+    overscroll-behavior: contain;
     will-change: transform, opacity;
   }
 
@@ -170,7 +172,7 @@
     top: -15px;
     width: 0%;
     height: 4px;
-    background: #000;
+    background: currentColor;
   }
 
   @media (max-width: 900px) {

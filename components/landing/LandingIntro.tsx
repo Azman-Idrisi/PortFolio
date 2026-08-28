@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { getLenis } from "@/lib/lenis";
 
 const DIGIT_2_NUMS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const DIGIT_3_NUMS: number[] = [
@@ -18,18 +17,9 @@ export function LandingIntro() {
   const [visible, setVisible] = useState(true);
   const [mounted, setMounted] = useState(false);
 
-  const lockedRef = useRef(false);
-
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  useEffect(() => {
-    if (mounted && !visible) {
-      document.documentElement.style.overflow = "";
-      document.body.style.overflow = "";
-    }
-  }, [mounted, visible]);
 
   useEffect(() => {
     if (!mounted) return;
@@ -39,14 +29,6 @@ export function LandingIntro() {
     }
     const el = rootRef.current;
     if (!el) return;
-
-    const lenis = getLenis();
-    if (lenis) {
-      lenis.stop();
-      lockedRef.current = true;
-    }
-    document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
 
     const ctx = gsap.context(() => {
       const digit1 = el.querySelector<HTMLElement>(".landing-digit-1");
@@ -100,12 +82,6 @@ export function LandingIntro() {
 
     return () => {
       ctx.revert();
-      if (lenis && lockedRef.current) {
-        lenis.start();
-        lockedRef.current = false;
-      }
-      document.documentElement.style.overflow = "";
-      document.body.style.overflow = "";
     };
   }, [mounted, reduced]);
 

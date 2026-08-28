@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { createLenis, destroyLenis } from "@/lib/lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -12,11 +12,9 @@ if (typeof window !== "undefined") {
 
 export function useSmoothScroll() {
   const reduced = useReducedMotion();
-  const initialized = useRef(false);
 
   useEffect(() => {
-    if (reduced || initialized.current) return;
-    initialized.current = true;
+    if (reduced) return;
 
     const lenis = createLenis();
 
