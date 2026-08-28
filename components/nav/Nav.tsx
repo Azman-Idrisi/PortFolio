@@ -8,8 +8,9 @@ import { Magnetic } from "@/hooks/useMagnetic";
 import { MobileMenu } from "./MobileMenu";
 import { resumeUrl } from "@/data/socials";
 import { cn } from "@/utils/cn";
+import { getLenis } from "@/lib/lenis";
 
-const sectionIds = ["top", "about", "work", "practice", "contact"];
+const sectionIds = ["top", "about", "work", "practice", "approach", "experience", "contact"];
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -47,7 +48,11 @@ export function Nav() {
     e.preventDefault();
     const id = href.replace("#", "");
     const el = document.getElementById(id);
-    if (el) {
+    if (!el) return;
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo(el, { offset: -56, lock: false });
+    } else {
       el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
     setMenuOpen(false);
