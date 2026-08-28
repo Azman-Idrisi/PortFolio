@@ -93,9 +93,21 @@ export function TechStack() {
                 {panel.description}
               </p>
 
+              <ul className="mt-4 md:mt-8 space-y-3 max-w-[44ch]">
+                {panel.evidence.map((e) => (
+                  <li
+                    key={e}
+                    className="flex items-baseline gap-3 text-[13px] md:text-[14px] leading-[1.5] text-paper-2 font-mono"
+                  >
+                    <span className="text-accent shrink-0 leading-none">·</span>
+                    <span>{e}</span>
+                  </li>
+                ))}
+              </ul>
+
               <div className="mt-auto pt-8 font-mono text-[12px] uppercase tracking-[0.18em] text-paper-2 flex items-center gap-3">
                 <span className="h-px w-8 bg-accent" />
-                <span>Panel {String(i + 1).padStart(2, "0")} / {String(techPanels.length).padStart(2, "0")}</span>
+                <span>Panel {String(i + 1).padStart(2, "0")} / {String(techPanels.length + 1).padStart(2, "0")}</span>
               </div>
             </article>
           ))}
@@ -106,7 +118,7 @@ export function TechStack() {
                 Stack {String(techPanels.length + 1).padStart(2, "0")}
               </span>
               <span className="font-mono text-[12px] uppercase tracking-[0.18em] text-paper-2">
-                + More
+                {String(techPanels.length + 1).padStart(2, "0")} / {String(techPanels.length + 1).padStart(2, "0")}
               </span>
             </div>
 
@@ -126,6 +138,11 @@ export function TechStack() {
                 </span>
               ))}
             </div>
+
+            <p className="mt-4 md:mt-8 text-[14px] md:text-[15px] leading-[1.55] text-paper-2 font-fraunces font-light max-w-[40ch]">
+              CI, deployment, queues, and the small infrastructure pieces that
+              keep a product running once it&apos;s shipped.
+            </p>
 
             <div className="mt-auto pt-8 font-mono text-[12px] uppercase tracking-[0.18em] text-paper-2 flex items-center gap-3">
               <span className="h-px w-8 bg-accent" />

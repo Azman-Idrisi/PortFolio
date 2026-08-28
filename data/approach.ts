@@ -38,4 +38,10 @@ export const approachStages: ApproachStage[] = [
     title: "Improve",
     body: "Performance, reliability, security, feedback, iteration. The product is the loop.",
   },
+  {
+    id: "deploy",
+    index: "06",
+    title: "Deploy",
+    body: "Thats It!",
+  },
 ];

@@ -31,7 +31,6 @@ export function useSmoothScroll() {
     return () => {
       gsap.ticker.remove(onRaf);
       destroyLenis();
-      initialized.current = false;
     };
   }, [reduced]);
 }

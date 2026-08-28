@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { approachStages } from "@/data/approach";
@@ -11,210 +11,304 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const STEP = 140;
+function splitWords(text: string) {
+  return text.split(/(\s+)/).map((seg, i) => ({
+    seg,
+    isSpace: /^\s+$/.test(seg),
+    key: `${seg}-${i}`,
+  }));
+}
 
 export function Approach() {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const wheelRef = useRef<HTMLDivElement | null>(null);
-  const stageRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const bodyRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const progressRef = useRef<HTMLDivElement | null>(null);
-  const dotsRef = useRef<Array<HTMLSpanElement | null>>([]);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const railRef = useRef<HTMLDivElement | null>(null);
   const reduced = useReducedMotion();
 
   useEffect(() => {
     const section = sectionRef.current;
+    const rail = railRef.current;
     if (!section) return;
 
-    const isMobile = window.innerWidth < 768;
-
-    if (reduced || isMobile) {
-      gsap.set(stageRefs.current.filter(Boolean), {
+    if (reduced) {
+      gsap.set(section.querySelectorAll("[data-approach-anim]"), {
         opacity: 1,
         y: 0,
-        scale: 1,
-        filter: "blur(0px)",
+        clipPath: "inset(0 0 0 0)",
       });
-      gsap.set(bodyRefs.current.filter(Boolean), { opacity: 1, y: 0 });
-      if (progressRef.current) gsap.set(progressRef.current, { scaleX: 1 });
+      gsap.set(section.querySelectorAll(".approach-word"), {
+        yPercent: 0,
+      });
+      if (rail) gsap.set(rail, { scaleX: 1 });
       return;
     }
 
     const ctx = gsap.context(() => {
-      const stages = stageRefs.current.filter(Boolean) as HTMLDivElement[];
-      const bodies = bodyRefs.current.filter(Boolean) as HTMLDivElement[];
-      const dots = dotsRef.current.filter(Boolean) as HTMLSpanElement[];
+      // Headline words
+      const headlineWords = section.querySelectorAll<HTMLElement>(
+        ".approach-headline .approach-word"
+      );
+      gsap.set(headlineWords, { yPercent: 110 });
 
-      const N = approachStages.length;
-      let lastIndex = -1;
+      // Section entry: headline reveal + intro paragraph + first-row index
+      const intro = section.querySelector(".approach-intro");
+      const rail = section.querySelector(".approach-rail");
 
-      const applyProgress = (progress: number) => {
-        const local = progress * N;
-        stages.forEach((el, idx) => {
-          const distance = idx - local;
-          const ad = Math.abs(distance);
-          const opacity = Math.max(0, 1 - ad * 0.7);
-          const y = distance * STEP;
-          const scale = 0.78 + (1 - Math.min(1, ad)) * 0.22;
-          gsap.set(el, {
-            opacity,
-            y,
-            scale,
-            filter: ad < 0.4 ? "blur(0px)" : "blur(1px)",
-          });
-        });
-        bodies.forEach((el, idx) => {
-          const distance = idx - local;
-          const ad = Math.abs(distance);
-          const opacity = Math.max(0, 1 - ad * 0.9);
-          const y = distance * 24;
-          gsap.set(el, { opacity, y });
-        });
-        dots.forEach((dot, idx) => {
-          const d = Math.min(1, Math.max(0, 1 - Math.abs(local - idx - 0.5)));
-          gsap.set(dot, {
-            backgroundColor: d > 0.5 ? "#E8FF8B" : "rgba(255,255,255,0.12)",
-            scale: 0.85 + d * 0.4,
-          });
-        });
-        if (progressRef.current) {
-          gsap.set(progressRef.current, {
-            scaleX: progress,
-            transformOrigin: "0% 50%",
-          });
-        }
-        const i = Math.min(N - 1, Math.max(0, Math.floor(local)));
-        if (i !== lastIndex) {
-          lastIndex = i;
-          setActiveIndex(i);
-        }
-      };
-
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top top",
-        end: () => `+=${N * 100}%`,
-        pin: true,
-        scrub: 0.6,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => applyProgress(self.progress),
+      const headlineTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+          once: true,
+        },
       });
+
+      headlineTl.to(headlineWords, {
+        yPercent: 0,
+        duration: 1.0,
+        stagger: 0.06,
+        ease: "expo.out",
+      });
+
+      if (intro) {
+        gsap.fromTo(
+          intro,
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.9,
+            ease: "expo.out",
+            scrollTrigger: {
+              trigger: intro,
+              start: "top 85%",
+              once: true,
+            },
+          }
+        );
+      }
+
+      // Top progress rail: scrubs left → right as the user scrolls through the section
+      if (rail) {
+        gsap.fromTo(
+          rail,
+          { scaleX: 0, transformOrigin: "0% 50%" },
+          {
+            scaleX: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: section,
+              start: "top 75%",
+              end: "bottom 75%",
+              scrub: 0.6,
+            },
+          }
+        );
+      }
+
+      // Each row: index clip-reveal, title word-stagger, body + tools slide up
+      const rows = section.querySelectorAll<HTMLElement>(".approach-row");
+      rows.forEach((row) => {
+        const index = row.querySelector<HTMLElement>(".approach-index");
+        const titleWords = row.querySelectorAll<HTMLElement>(
+          ".approach-row-title .approach-word"
+        );
+        const body = row.querySelector<HTMLElement>(".approach-body");
+        const tools = row.querySelector<HTMLElement>(".approach-tools");
+
+        gsap.set(titleWords, { yPercent: 110 });
+        if (index) gsap.set(index, { clipPath: "inset(0 100% 0 0)" });
+        if (body) gsap.set(body, { opacity: 0, y: 16 });
+        if (tools) gsap.set(tools, { opacity: 0, y: 16 });
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: row,
+            start: "top 82%",
+            once: true,
+          },
+        });
+
+        if (index) {
+          tl.to(
+            index,
+            {
+              clipPath: "inset(0 0% 0 0)",
+              duration: 0.7,
+              ease: "expo.out",
+            },
+            0
+          );
+        }
+        tl.to(
+          titleWords,
+          {
+            yPercent: 0,
+            duration: 0.9,
+            stagger: 0.035,
+            ease: "expo.out",
+          },
+          0.05
+        );
+        if (body) {
+          tl.to(
+            body,
+            { opacity: 1, y: 0, duration: 0.7, ease: "expo.out" },
+            0.15
+          );
+        }
+        if (tools) {
+          tl.to(
+            tools,
+            { opacity: 1, y: 0, duration: 0.7, ease: "expo.out" },
+            0.25
+          );
+        }
+      });
+
+      // Closing footer: fade + slide
+      const closer = section.querySelector(".approach-closer");
+      if (closer) {
+        gsap.set(closer, { opacity: 0, y: 12 });
+        gsap.to(closer, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "expo.out",
+          scrollTrigger: {
+            trigger: closer,
+            start: "top 90%",
+            once: true,
+          },
+        });
+      }
     }, section);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+    };
   }, [reduced]);
+
+  const headlineWords = splitWords("How I build.");
 
   return (
     <section
       id="approach"
       ref={sectionRef}
-      className="relative w-full section-pad-y border-t border-line overflow-hidden"
+      className="relative w-full section-pad-y px-6 md:px-10 border-t border-line"
     >
-      <div className="mx-auto max-w-[1440px] px-6 md:px-10 h-full flex flex-col">
-        <SectionLabel index="05" className="mb-10 md:mb-12">
+      <div className="mx-auto max-w-[1440px]">
+        <SectionLabel index="04" className="mb-12">
           How I build
         </SectionLabel>
 
-        <h2 className="font-fraunces text-[clamp(48px,9vw,140px)] leading-[0.95] text-paper font-light tracking-[-0.04em] mb-10 md:mb-16">
-          How I build.
-        </h2>
+        <div
+          ref={railRef}
+          aria-hidden="true"
+          className="approach-rail h-px w-full bg-line mb-10 md:mb-12 origin-left will-change-transform"
+        />
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 flex-1">
-          {/* Wheel */}
-          <div className="md:col-span-7 relative flex flex-col">
-            <div
-              ref={wheelRef}
-              className="relative flex-1 min-h-[clamp(360px,55vh,560px)] overflow-hidden"
-            >
-              {approachStages.map((s, i) => (
-                <div
-                  key={s.id}
-                  ref={(el) => {
-                    stageRefs.current[i] = el;
-                  }}
-                  className="absolute left-0 right-0 top-1/2 will-change-transform"
-                  style={{ transform: "translateY(-50%)" }}
-                  aria-hidden={i !== activeIndex}
-                >
-                  <div className="flex items-baseline gap-4 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 mb-16">
+          <h2 className="md:col-span-8 font-fraunces text-[clamp(40px,6vw,96px)] leading-[1] text-paper font-light tracking-[-0.03em] max-w-[18ch]">
+            <span className="approach-headline block overflow-hidden">
+              <span className="block">
+                {headlineWords.map(({ seg, isSpace, key }) =>
+                  isSpace ? (
+                    <span key={key}>{seg}</span>
+                  ) : (
                     <span
-                      className={`font-mono text-[14px] md:text-[16px] uppercase tracking-[0.18em] ${i === activeIndex ? "text-accent" : "text-paper-2"}`}
+                      key={key}
+                      className="inline-block overflow-hidden align-bottom"
                     >
-                      {s.index}
+                      <span className="approach-word inline-block will-change-transform">
+                        {seg}
+                      </span>
                     </span>
-                    <h3 className="font-fraunces text-[clamp(56px,9vw,128px)] leading-[0.95] text-paper font-light tracking-[-0.04em]">
-                      {s.title}
-                    </h3>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+                  )
+                )}
+              </span>
+            </span>
+          </h2>
+          <p
+            data-approach-anim
+            className="approach-intro md:col-span-4 self-end text-[15px] md:text-[16px] leading-[1.6] text-paper-2 font-fraunces font-light max-w-[36ch]"
+          >
+            The same loop, every time. Understood, designed, built, shipped, and
+            improved until the product is honest.
+          </p>
+        </div>
 
-          {/* Body */}
-          <div className="md:col-span-4 md:col-start-9 md:pl-6 relative flex flex-col">
-            <div className="relative flex-1 min-h-[260px]">
-              {approachStages.map((s, i) => (
+        <ol className="border-t border-line">
+          {approachStages.map((s, i) => {
+            const titleWords = splitWords(s.title);
+            return (
+              <li
+                key={s.id}
+                className={`approach-row grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 py-8 md:py-10 border-b border-line ${
+                  i === approachStages.length - 1 ? "md:border-b-0" : ""
+                }`}
+              >
                 <div
-                  key={`body-${s.id}`}
-                  ref={(el) => {
-                    bodyRefs.current[i] = el;
-                  }}
-                  className="absolute inset-0 flex flex-col justify-center will-change-transform"
-                  aria-hidden={i !== activeIndex}
+                  className="approach-index md:col-span-2 font-mono text-[12px] uppercase tracking-[0.18em] text-accent will-change-[clip-path]"
                 >
-                  <div className="h-px w-12 bg-accent mb-6" />
-                  <p className="font-fraunces text-[18px] md:text-[22px] leading-[1.4] text-paper font-light max-w-[36ch]">
-                    {s.body}
-                  </p>
-                  {s.tools && (
-                    <ul className="mt-6 flex flex-wrap gap-x-2 gap-y-2 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-2">
-                      {s.tools.map((t) => (
+                  {s.index}
+                </div>
+
+                <h3 className="approach-row-title md:col-span-3 font-fraunces text-[28px] md:text-[36px] leading-[1.05] text-paper font-light tracking-[-0.02em] overflow-hidden">
+                  <span className="block">
+                    {titleWords.map(({ seg, isSpace, key }) =>
+                      isSpace ? (
+                        <span key={key}>{seg}</span>
+                      ) : (
+                        <span
+                          key={key}
+                          className="inline-block overflow-hidden align-bottom"
+                        >
+                          <span className="approach-word inline-block will-change-transform">
+                            {seg}
+                          </span>
+                        </span>
+                      )
+                    )}
+                  </span>
+                </h3>
+
+                <p
+                  className={`approach-body ${
+                    s.tools
+                      ? "md:col-span-5 text-[15px] md:text-[16px] leading-[1.55] text-paper-2 font-fraunces font-light max-w-[48ch]"
+                      : "md:col-span-7 text-[15px] md:text-[16px] leading-[1.55] text-paper-2 font-fraunces font-light max-w-[48ch]"
+                  }`}
+                >
+                  {s.body}
+                </p>
+
+                {s.tools && (
+                  <div className="approach-tools md:col-span-2 md:flex md:justify-end">
+                    <ul className="flex flex-wrap gap-2 md:justify-end">
+                      {s.tools.slice(0, 3).map((t) => (
                         <li
                           key={t}
-                          className="border border-line rounded-full px-2.5 py-1"
+                          className="inline-flex items-center rounded-full border border-line bg-ink-2 px-2.5 py-1 text-[10px] font-mono uppercase tracking-[0.14em] text-paper-2"
                         >
                           {t}
                         </li>
                       ))}
                     </ul>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+                  </div>
+                )}
+              </li>
+            );
+          })}
+        </ol>
 
-        {/* Progress + dots */}
-        <div className="mt-10 md:mt-14 flex items-center gap-4 md:gap-6">
-          <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-2 shrink-0">
-            {approachStages.map((s, i) => (
-              <div key={s.id} className="flex items-center gap-2">
-                <span
-                  ref={(el) => {
-                    dotsRef.current[i] = el;
-                  }}
-                  className="block h-1.5 w-1.5 rounded-full will-change-transform"
-                  style={{
-                    backgroundColor:
-                      i === 0 ? "#E8FF8B" : "rgba(255,255,255,0.12)",
-                  }}
-                />
-                <span className={i === activeIndex ? "text-paper" : "text-paper-2"}>
-                  {s.index}
-                </span>
-              </div>
-            ))}
-          </div>
-          <div className="flex-1 h-px bg-line relative overflow-hidden">
-            <div
-              ref={progressRef}
-              className="absolute inset-0 bg-accent origin-left will-change-transform"
-              style={{ transform: "scaleX(0)" }}
-            />
-          </div>
+        <div className="approach-closer mt-10 md:mt-12 flex items-baseline justify-between gap-6 md:gap-10">
+          <span className="font-mono text-[12px] uppercase tracking-[0.18em] text-paper-2">
+            {String(approachStages.length).padStart(2, "0")} steps · repeated
+            every project
+          </span>
+          <span className="hidden md:flex items-center gap-3 font-mono text-[12px] uppercase tracking-[0.18em] text-paper-2">
+            <span className="h-px w-8 bg-accent" />
+            <span>Loop closed · ship again</span>
+          </span>
         </div>
       </div>
     </section>

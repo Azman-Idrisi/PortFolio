@@ -28,26 +28,51 @@ export const techPanels = [
     name: "React Native",
     description:
       "2+ years shipping cross-platform apps to Google Play. Expo, EAS Build, native modules when needed.",
+    evidence: [
+      "WalletMate · SRM Hostel OLMS · TaskMate",
+      "Production builds via EAS + Play Console",
+      "Native module bridges for biometrics & secure storage",
+    ],
   },
   {
     name: "Next.js / React",
     description:
       "App Router, server components, and motion that doesn't fight the framework.",
+    evidence: [
+      "Driver · Resumix · Password Manager",
+      "Server components, route handlers, ISR",
+      "Lenis + GSAP for scroll-driven UI",
+    ],
   },
   {
     name: "TypeScript",
     description:
       "Strict everywhere. The compiler catches what I'd otherwise miss.",
+    evidence: [
+      "strict + noUncheckedIndexedAccess",
+      "Typed API clients end-to-end",
+      "No `any` outside third-party shims",
+    ],
   },
   {
     name: "Node + Express",
     description:
       "REST APIs, auth, and the glue that holds products together.",
+    evidence: [
+      "Job Scheduler · TaskMate backend",
+      "JWT auth, request validation, structured errors",
+      "BullMQ workers + Redis Streams",
+    ],
   },
   {
     name: "MongoDB / PostgreSQL",
     description:
       "Schema design, queries, and the parts of the stack most people skip.",
+    evidence: [
+      "Supabase (Postgres) for Driver",
+      "MongoDB for TaskMate + Resumix",
+      "Indexes, migrations, and query plans",
+    ],
   },
 ];
 

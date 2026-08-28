@@ -97,7 +97,7 @@ export const projects: Project[] = [
     role: "Build · Maintain",
     description:
       "A student leave-management app for SRM Institute of Science and Technology that simplified the leave-application process.",
-    thumbnail: "/assets/projects/olms.webp",
+    thumbnail: "/olms.png",
     technologies: ["React Native", "Expo", "TypeScript", "GitHub Actions", "CI/CD"],
     features: [
       "Leave request flow",

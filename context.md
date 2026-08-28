@@ -19,7 +19,7 @@ A complete visual + architectural rewrite of the portfolio, replacing the origin
 - **Contact**: oversized `Let's build something.` + magnetic copy-to-clipboard email + 4 socials + footer with resume link.
 - **Lenis** smooth scroll wired to GSAP ScrollTrigger.
 - **Custom cursor** (`mix-blend-difference`, scales on hover/text, hidden on touch + reduced motion).
-- **Preloader** (Zentry "AZ" monogram, session-gated).
+- **Preloader**: yellow full-viewport overlay (~11.9s) — odometer wheels count to 100%, progress bar fills, then slides left + fades out. No session gate, no images, no headline. Plays on every load.
 
 ## 2. Key decisions (locked, do not relitigate)
 
@@ -33,7 +33,7 @@ A complete visual + architectural rewrite of the portfolio, replacing the origin
 | Monogram | Zentry (local) | Kept for the "AZ" preloader/mark. |
 | Smooth scroll | Lenis + GSAP ticker override | The reference feels Lenis-driven. Gated by `prefers-reduced-motion`. |
 | State (drawer) | React state, mirrored to URL | `useUrlSyncedProject`. Single drawer, no auto-scroll on open. |
-| Featured row | WalletMate auto-open for 6s on first visit | Real published Play Store app = strongest credibility anchor. Per your answer. |
+| Featured row | WalletMate auto-open for 6s on first visit | Real published Play Store app = strongest credibility anchor. Per your answer. Gated by `sessionStorage` key `azman-walletmate-seen`; suppressed if `?project=` deep link is present. |
 | Project order | WalletMate → Job Scheduler → Driver → OLMS → TaskMate → Resumix → Password Manager → Zentry → Brainwave → Nike → Apple → Crypto | Per your answer (strongest first). |
 
 ## 3. Content rules that MUST stay in force
@@ -86,6 +86,7 @@ If you see references to any of these in old docs or branches, they are stale.
 - **TechStack horizontal scroll** is desktop-only (≥768px). Mobile gets a vertical stack. This is intentional — pinned horizontal scroll on mobile is a usability trap.
 - **Hero is NOT in the dynamic-import list.** It's server-rendered-friendly enough that we ship it eagerly, and putting it behind a dynamic import would cause a flash on first paint.
 - **Magnetic uses a `<motion.span>` wrapping an `<a>`** for anchor links, rather than `motion.a` directly. This was a TS workaround for Framer Motion's strict prop typing on `href`/event handlers. The visual result is identical; don't refactor unless the TS errors resurface differently.
+- **StrictMode + Lenis**: the `initialized.current = false` reset in `useSmoothScroll` cleanup was removed. It caused double-init in React 19 StrictMode (cleanup of mount #1 runs before mount #2, resetting the guard). The Lenis singleton in `lib/lenis.ts` already prevents true duplicates — the ref guard was redundant and harmful.
 
 ## 6a. Vertical rhythm (the layout pass)
 
@@ -135,6 +136,7 @@ After the initial build, a visual review surfaced three spacing issues:
 
 - **v1 — initial rewrite**: replaced Aceternity template with editorial Awwwards layout. 7 verified + 5 repo-only projects in the archive. Lenis + GSAP + Motion. Dark-only with acid-lime accent.
 - **v2 — layout rhythm pass**: resolved 3 spacing issues (Hero → About dead space, Marquee → Selected Work dead space, marquee vertical clipping). Introduced shared `.section-pad-y` / `.section-pad-y-sm` utilities. Removed `min-h-screen` + `justify-center` from the hero. See §6a for full diff.
+- **v3 — loader + scroll-lock fix**: stripped the landing intro to odometer + progress bar + slide-left fade (removed 7-image carousel, nav drop, headline rise, 13.2s sequence). Dropped the `createPortal` into `document.body` — the section is `position: fixed; z-index: 250` so it overlays without escaping the React tree (the portal caused `removeChild`/`insertBefore` React 19 reconciliation crashes in `Sections`). Fixed `useSmoothScroll` StrictMode double-init by removing the `initialized.current = false` reset in cleanup. See AGENTS.md "Gotchas" for the current rules.
 
 ## 9. Original brief (for reference)
 

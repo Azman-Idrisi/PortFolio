@@ -14,16 +14,8 @@ const TechStack = dynamic(
   () => import("@/components/skills/TechStack").then((m) => m.TechStack),
   { ssr: false }
 );
-const Proof = dynamic(
-  () => import("@/components/proof/Proof").then((m) => m.Proof),
-  { ssr: false }
-);
 const Approach = dynamic(
   () => import("@/components/approach/Approach").then((m) => m.Approach),
-  { ssr: false }
-);
-const EngineeringDNA = dynamic(
-  () => import("@/components/dna/EngineeringDNA").then((m) => m.EngineeringDNA),
   { ssr: false }
 );
 const Experience = dynamic(
@@ -41,9 +33,7 @@ export function Sections() {
       <About />
       <ProjectArchive />
       <TechStack />
-      <Proof />
       <Approach />
-      <EngineeringDNA />
       <Experience />
       <Contact />
     </SectionsErrorBoundary>

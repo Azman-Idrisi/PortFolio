@@ -19,7 +19,7 @@ Next.js 16 (App Router) + React 19 + TypeScript portfolio for **Mohammad Azman**
 - **Fonts**: `next/font/google` for Fraunces (variable, opsz axis), Inter, JetBrains Mono. `next/font/local` for Zentry (`public/fonts/zentry-regular.woff2`).
 - **Path alias**: `@/*` → `./*`
 - **Dark-only theme** — no theme provider. CSS variables in `app/globals.css` `@theme` block. The yellow landing intro is a fully-namespaced exception (`.landing-*` block in `globals.css`); it does not use the ink/paper tokens.
-- **Landing intro**: a full-viewport fixed yellow overlay (`<LandingIntro />`) sits at z=250 on top of the existing portfolio and runs a 13.2s GSAP sequence (odometer + 7-image clip-path reveal + zoom + nav drop + headline rise + fade-out). It plays on every page load (no sessionStorage gate). Below it, the existing dark portfolio renders and animates normally.
+- **Landing intro**: a full-viewport fixed yellow overlay (`<LandingIntro />`) sits at z=250 on top of the portfolio and runs a ~11.9s GSAP sequence: three odometer wheels count to 100%, a progress bar fills, then the whole overlay slides left (`xPercent: -100`) + fades out to reveal the portfolio underneath. No images, no nav/headline, no sessionStorage gate. It plays on every page load.
 
 ## File Tree (key paths)
 ```
@@ -40,7 +40,7 @@ components/
   experience/Experience.tsx
   contact/Contact.tsx
   cursor/Cursor.tsx
-  landing/LandingIntro.tsx  yellow 13.2s landing overlay (odometer + photos + nav + headline)
+  landing/LandingIntro.tsx  yellow ~11.9s landing overlay (odometer → progress bar → slide-left+fade)
   primitives/         Button.tsx, Tag.tsx, Meta.tsx, Divider.tsx, SectionLabel.tsx, Marquee.tsx, RevealText.tsx, SocialIcon.tsx
 hooks/
   useSmoothScroll.ts  Lenis + GSAP integration
@@ -87,8 +87,9 @@ public/
 - **Lenis + GSAP** integration requires `gsap.ticker.add((t) => lenis.raf(t * 1000))` and `gsap.ticker.lagSmoothing(0)`. ScrollTrigger also needs `lenis.on("scroll", ScrollTrigger.update)`.
 - **Cursor** is gated by `useMedia("(pointer: fine)")` and `useReducedMotion`. Hidden on touch.
 - **Reduced motion**: `useSmoothScroll` no-ops, TechStack falls back to vertical stack, LandingIntro unmounts immediately (skips the 13.2s sequence), drawer uses 150ms fade, no auto-open of WalletMate.
-- **LandingIntro z-index**: 250 — sits above the existing `<Nav />` (z=200) and `<Cursor />` (z=200) so the yellow overlay is the only thing visible during the intro. The existing `<Nav />` is `position: fixed` and lives behind the landing during the intro; once the landing fades, it is on top of the page content normally.
-- **LandingIntro React 19 StrictMode safety**: all `.digit-3` nums and the headline character spans are rendered in JSX (no `appendChild` or `innerHTML` rewrite in the effect). All GSAP selectors are scoped via `gsap.context(rootRef)` and undone by `ctx.revert()` on cleanup. Image pre-load has a 1s timeout fallback.
+- **LandingIntro z-index**: 250 — sits above the existing `<Nav />` (z=200) and `<Cursor />` (z=200). The overlay is inline in the React tree (not a portal), so StrictMode double-mount is handled by `gsap.context(rootRef)` + `ctx.revert()` on cleanup. `requestAnimationFrame` defers `setVisible(false)` so unmount happens in a clean commit phase.
+- **Lenis StrictMode guard**: `useSmoothScroll.ts` does **not** reset `initialized.current` in cleanup — that caused double-init and broken scroll in dev. The singleton in `lib/lenis.ts` prevents true duplicates; the guard was redundant and harmful.
+- **Reduced motion**: `useSmoothScroll` no-ops, TechStack falls back to vertical stack, LandingIntro unmounts immediately (skips the ~11.9s sequence), drawer uses 150ms fade, no auto-open of WalletMate.
 - **No test suite** configured.
 
 ## Pending / TODO
@@ -98,3 +99,7 @@ public/
 - `tsconfig.json` `target: "ES2017"` — may want to bump to ES2020 for newer syntax
 - **JSON-LD `Person` schema** in `layout.tsx` — metadata is solid but structured data would improve discoverability
 - **GitHub URLs for the 4 full-stack projects** (Job Scheduler, Driver, Resumix, Password Manager) — `data/projects.ts` has the `githubUrl?` field; add values when repos are published and the drawer will render the `Source ↗` button automatically
+
+## Browser Debugging (MCP)
+- **Chrome DevTools MCP** configured at `~/.config/opencode/opencode.json`. After restarting opencode, available tools: `chrome-devtools_navigate_page`, `take_screenshot`, `evaluate_script`, `list_console_messages`, `list_network_requests`.
+- **Fallback**: `scripts/snap.mjs` (Playwright) — run `node scripts/snap.mjs` with dev server up; outputs screenshot + console + computed styles to `public/.debug/`.

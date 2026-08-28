@@ -56,7 +56,7 @@ export function Experience() {
       className="relative w-full section-pad-y px-6 md:px-10 border-t border-line"
     >
       <div className="mx-auto max-w-[1440px]">
-        <SectionLabel index="07" className="mb-16">
+        <SectionLabel index="05" className="mb-16">
           Experience
         </SectionLabel>
 
@@ -97,16 +97,6 @@ export function Experience() {
               </ul>
             </div>
           ))}
-
-          <div
-            data-exp-anim
-            className="pt-12 border-t border-line"
-          >
-            <p className="text-[15px] md:text-[16px] leading-[1.6] text-paper-2 font-fraunces font-light max-w-[60ch]">
-              I also practice data structures and algorithms in C++ — keeps the
-              fundamentals honest.
-            </p>
-          </div>
         </div>
       </div>
     </section>

@@ -3,7 +3,7 @@ import tseslint from "typescript-eslint";
 import reactHooks from "eslint-plugin-react-hooks";
 
 export default tseslint.config(
-  { ignores: [".next/", "node_modules/"] },
+  { ignores: [".next/", "node_modules/", ".debug/"] },
   nextPlugin.configs.recommended,
   nextPlugin.configs["core-web-vitals"],
   ...tseslint.configs.recommended,

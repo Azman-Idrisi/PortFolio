@@ -65,7 +65,7 @@ export function Contact() {
       className="relative w-full section-pad-y px-6 md:px-10 border-t border-line"
     >
       <div className="mx-auto max-w-[1440px] flex flex-col items-center text-center">
-        <SectionLabel index="08" className="mb-12">
+        <SectionLabel index="06" className="mb-12">
           Contact
         </SectionLabel>
 
