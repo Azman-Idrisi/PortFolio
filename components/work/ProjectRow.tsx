@@ -34,7 +34,7 @@ export function ProjectRow({ project, isOpen, onToggle, index }: ProjectRowProps
         onMouseLeave={() => setHovered(false)}
         aria-expanded={isOpen}
         aria-controls={`project-drawer-${project.id}`}
-        className="group relative w-full text-left py-6 md:py-8 grid grid-cols-12 gap-3 md:gap-6 items-baseline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
+        className="group relative w-full text-left py-6 md:py-8 grid grid-cols-12 gap-3 md:gap-6 items-center focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
         data-cursor="hover"
       >
         <span className="col-span-2 md:col-span-1 font-mono text-[12px] uppercase tracking-[0.18em] text-paper-2">
@@ -71,17 +71,26 @@ export function ProjectRow({ project, isOpen, onToggle, index }: ProjectRowProps
           {project.category} · {project.role} · {project.year}
         </span>
 
-        <motion.span
-          className="col-span-12 md:col-span-1 text-right font-fraunces text-2xl text-paper-2 origin-center"
-          animate={{
-            rotate: isOpen ? 45 : 0,
-            color: isOpen || hovered ? "#E8FF8B" : undefined,
-          }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        <span
+          className="relative col-span-12 md:col-span-1 text-right font-fraunces text-2xl"
           aria-hidden="true"
         >
-          +
-        </motion.span>
+          <motion.span
+            className="relative inline-block h-[1em] w-[1em] align-middle"
+            animate={{
+              color: isOpen || hovered ? "#E8FF8B" : "#a8a39a",
+            }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <span className="absolute left-0 top-1/2 h-px w-full bg-current -translate-y-1/2" />
+            <motion.span
+              className="absolute left-1/2 top-0 h-full w-px bg-current -translate-x-1/2 origin-center"
+              initial={false}
+              animate={{ scaleY: isOpen ? 0 : 1 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            />
+          </motion.span>
+        </span>
       </button>
     </motion.div>
   );

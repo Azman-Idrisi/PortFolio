@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
 import { navItems } from "@/data/content";
 import { useActiveSection } from "@/hooks/useActiveSection";
@@ -14,12 +14,23 @@ const sectionIds = ["top", "about", "work", "practice", "contact"];
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { scrollY } = useScroll();
+  const { scrollY, scrollYProgress } = useScroll();
   const active = useActiveSection(sectionIds);
+  const lastYRef = useRef(0);
+  const [hidden, setHidden] = useState(false);
 
   useMotionValueEvent(scrollY, "change", (v) => {
     setScrolled(v > 80);
+    const delta = v - lastYRef.current;
+    if (Math.abs(delta) > 4) {
+      setHidden(delta < 0 && v > 160 && active !== "top");
+      lastYRef.current = v;
+    }
   });
+
+  useEffect(() => {
+    if (active === "top") setHidden(false);
+  }, [active]);
 
   useEffect(() => {
     if (menuOpen) {
@@ -47,13 +58,12 @@ export function Nav() {
       <motion.header
         className={cn(
           "fixed inset-x-0 top-0 z-[200] transition-[background-color,border-color,backdrop-filter] duration-500",
-          scrolled
+          scrolled && !hidden
             ? "bg-ink/70 backdrop-blur-md border-b border-line"
             : "bg-transparent border-b border-transparent"
         )}
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        animate={{ y: hidden ? "-100%" : "0%" }}
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       >
         <div
           className={cn(
@@ -121,6 +131,11 @@ export function Nav() {
             <span className="h-px w-6 bg-paper" />
           </button>
         </div>
+        <motion.div
+          className="absolute inset-x-0 bottom-0 h-px origin-left bg-accent"
+          style={{ scaleX: scrollYProgress }}
+          aria-hidden
+        />
       </motion.header>
 
       <AnimatePresence>

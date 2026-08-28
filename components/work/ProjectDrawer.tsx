@@ -1,5 +1,6 @@
 "use client";
 
+import { useLayoutEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { Project } from "@/data/projects";
 import { Meta } from "@/components/primitives/Meta";
@@ -12,29 +13,54 @@ type ProjectDrawerProps = {
   isOpen: boolean;
 };
 
+const EASE = [0.22, 1, 0.36, 1] as const;
+
 export function ProjectDrawer({ project, isOpen }: ProjectDrawerProps) {
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const [height, setHeight] = useState<number | "auto">(0);
+
+  useLayoutEffect(() => {
+    const el = contentRef.current;
+    if (!el) return;
+    const measure = () => setHeight(isOpen ? el.scrollHeight : 0);
+    measure();
+    if (isOpen) {
+      const ro = new ResizeObserver(measure);
+      ro.observe(el);
+      return () => ro.disconnect();
+    }
+  }, [isOpen, project.id]);
+
+  useLayoutEffect(() => {
+    if (!isOpen) return;
+    const onResize = () => {
+      const el = contentRef.current;
+      if (!el) return;
+      setHeight(el.scrollHeight);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [isOpen]);
+
   return (
     <motion.div
       id={`project-drawer-${project.id}`}
       role="region"
       aria-hidden={!isOpen}
       initial={false}
-      animate={{
-        height: isOpen ? "auto" : 0,
-        opacity: isOpen ? 1 : 0,
-      }}
-      transition={{
-        height: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
-        opacity: { duration: 0.4, delay: isOpen ? 0.1 : 0 },
-      }}
-      className="overflow-hidden"
+      animate={{ height }}
+      transition={{ duration: 0.5, ease: EASE }}
+      style={{ overflow: "hidden" }}
     >
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 py-10 md:py-14">
+      <div
+        ref={contentRef}
+        className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 py-10 md:py-14"
+      >
         <div className="md:col-span-6">
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : 12 }}
-            transition={{ duration: 0.6, delay: isOpen ? 0.2 : 0 }}
+            initial={false}
+            animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : 8 }}
+            transition={{ duration: 0.5, ease: EASE, delay: isOpen ? 0.05 : 0 }}
           >
             <ProjectThumbnail
               src={project.thumbnail}
@@ -46,18 +72,18 @@ export function ProjectDrawer({ project, isOpen }: ProjectDrawerProps) {
 
         <div className="md:col-span-6 space-y-8">
           <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : 12 }}
-            transition={{ duration: 0.6, delay: isOpen ? 0.25 : 0 }}
+            initial={false}
+            animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : 8 }}
+            transition={{ duration: 0.5, ease: EASE, delay: isOpen ? 0.08 : 0 }}
             className="font-fraunces text-[20px] md:text-[22px] leading-[1.4] text-paper font-light"
           >
             {project.description}
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : 12 }}
-            transition={{ duration: 0.6, delay: isOpen ? 0.3 : 0 }}
+            initial={false}
+            animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : 8 }}
+            transition={{ duration: 0.5, ease: EASE, delay: isOpen ? 0.12 : 0 }}
             className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 border-t border-line pt-6"
           >
             <Meta label="Year" value={project.year} />
@@ -68,9 +94,9 @@ export function ProjectDrawer({ project, isOpen }: ProjectDrawerProps) {
 
           {project.features && project.features.length > 0 && (
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : 12 }}
-              transition={{ duration: 0.6, delay: isOpen ? 0.35 : 0 }}
+              initial={false}
+              animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : 8 }}
+              transition={{ duration: 0.5, ease: EASE, delay: isOpen ? 0.16 : 0 }}
               className="border-t border-line pt-6"
             >
               <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-paper-2 mb-4">
@@ -92,9 +118,9 @@ export function ProjectDrawer({ project, isOpen }: ProjectDrawerProps) {
 
           {project.metrics && project.metrics.length > 0 && (
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : 12 }}
-              transition={{ duration: 0.6, delay: isOpen ? 0.4 : 0 }}
+              initial={false}
+              animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : 8 }}
+              transition={{ duration: 0.5, ease: EASE, delay: isOpen ? 0.2 : 0 }}
               className="border-t border-line pt-6"
             >
               <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-paper-2 mb-4">
@@ -115,9 +141,9 @@ export function ProjectDrawer({ project, isOpen }: ProjectDrawerProps) {
 
           {project.technologies.length > 3 && (
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : 12 }}
-              transition={{ duration: 0.6, delay: isOpen ? 0.45 : 0 }}
+              initial={false}
+              animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : 8 }}
+              transition={{ duration: 0.5, ease: EASE, delay: isOpen ? 0.24 : 0 }}
               className="border-t border-line pt-6"
             >
               <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-paper-2 mb-4">
@@ -138,9 +164,9 @@ export function ProjectDrawer({ project, isOpen }: ProjectDrawerProps) {
 
           {(project.projectUrl || project.githubUrl) && (
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : 12 }}
-              transition={{ duration: 0.6, delay: isOpen ? 0.5 : 0 }}
+              initial={false}
+              animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : 8 }}
+              transition={{ duration: 0.5, ease: EASE, delay: isOpen ? 0.28 : 0 }}
               className="flex flex-wrap items-center gap-3 pt-2"
             >
               {project.projectUrl && (

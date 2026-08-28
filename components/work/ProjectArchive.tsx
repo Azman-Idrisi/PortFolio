@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { AnimatePresence, motion } from "motion/react";
 import { projects } from "@/data/projects";
 import { ProjectRow } from "./ProjectRow";
 import { ProjectDrawer } from "./ProjectDrawer";
@@ -106,19 +105,7 @@ export function ProjectArchive() {
                   onToggle={() => handleToggle(project.id)}
                   index={i}
                 />
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      key={`drawer-${project.id}`}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <ProjectDrawer project={project} isOpen={isOpen} />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                <ProjectDrawer project={project} isOpen={isOpen} />
               </div>
             );
           })}
