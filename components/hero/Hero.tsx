@@ -106,18 +106,18 @@ export function Hero() {
         </div>
 
         <h1 className="mt-8 md:mt-12 font-fraunces text-paper font-light leading-[0.85] tracking-[-0.04em]">
-          <span className="block overflow-hidden">
+          <span className="block overflow-hidden pr-1">
             <span
               data-hero-anim="name-1"
-              className="block text-[18vw] md:text-[14vw] lg:text-[200px] will-change-transform"
+              className="block text-[15vw] sm:text-[16vw] md:text-[14vw] lg:text-[200px] will-change-transform"
             >
               Mohammad
             </span>
           </span>
-          <span className="block overflow-hidden">
+          <span className="block overflow-hidden pr-1">
             <span
               data-hero-anim="name-2"
-              className="block text-[18vw] md:text-[14vw] lg:text-[200px] will-change-transform text-paper-2"
+              className="block text-[15vw] sm:text-[16vw] md:text-[14vw] lg:text-[200px] will-change-transform text-paper-2"
             >
               Azman<span className="text-accent">.</span>
             </span>

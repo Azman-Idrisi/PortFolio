@@ -42,70 +42,150 @@ export function Approach() {
       return;
     }
 
-    const ctx = gsap.context(() => {
-      // Headline words
-      const headlineWords = section.querySelectorAll<HTMLElement>(
-        ".approach-headline .approach-word"
+    // Headline words
+    const headlineWords = section.querySelectorAll<HTMLElement>(
+      ".approach-headline .approach-word"
+    );
+    gsap.set(headlineWords, { yPercent: 110 });
+
+    const intro = section.querySelector<HTMLElement>(".approach-intro");
+    const railEl = section.querySelector<HTMLElement>(".approach-rail");
+
+    ScrollTrigger.create({
+      trigger: section,
+      start: "top 80%",
+      once: true,
+      onEnter: () => {
+        gsap.to(headlineWords, {
+          yPercent: 0,
+          duration: 1.0,
+          stagger: 0.06,
+          ease: "expo.out",
+        });
+      },
+    });
+
+    if (intro) {
+      gsap.fromTo(
+        intro,
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.9,
+          ease: "expo.out",
+          scrollTrigger: {
+            trigger: intro,
+            start: "top 85%",
+            once: true,
+          },
+        }
       );
-      gsap.set(headlineWords, { yPercent: 110 });
+    }
 
-      // Section entry: headline reveal + intro paragraph + first-row index
-      const intro = section.querySelector(".approach-intro");
-      const rail = section.querySelector(".approach-rail");
+    // Top progress rail: scrubs left → right as the user scrolls through the section
+    if (railEl) {
+      gsap.fromTo(
+        railEl,
+        { scaleX: 0, transformOrigin: "0% 50%" },
+        {
+          scaleX: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 75%",
+            end: "bottom 75%",
+            scrub: 0.6,
+          },
+        }
+      );
+    }
 
-      const headlineTl = gsap.timeline({
+    // Each row: index clip-reveal, title word-stagger, body + tools slide up
+    const rows = section.querySelectorAll<HTMLElement>(".approach-row");
+    rows.forEach((row) => {
+      const index = row.querySelector<HTMLElement>(".approach-index");
+      const titleWords = row.querySelectorAll<HTMLElement>(
+        ".approach-row-title .approach-word"
+      );
+      const body = row.querySelector<HTMLElement>(".approach-body");
+      const tools = row.querySelector<HTMLElement>(".approach-tools");
+
+      gsap.set(titleWords, { yPercent: 110 });
+      if (index) gsap.set(index, { clipPath: "inset(0 100% 0 0)" });
+      if (body) gsap.set(body, { opacity: 0, y: 16 });
+      if (tools) gsap.set(tools, { opacity: 0, y: 16 });
+
+      const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: section,
-          start: "top 80%",
+          trigger: row,
+          start: "top 82%",
           once: true,
         },
       });
 
-      headlineTl.to(headlineWords, {
-        yPercent: 0,
-        duration: 1.0,
-        stagger: 0.06,
-        ease: "expo.out",
-      });
-
-      if (intro) {
-        gsap.fromTo(
-          intro,
-          { opacity: 0, y: 20 },
+      if (index) {
+        tl.to(
+          index,
           {
-            opacity: 1,
-            y: 0,
-            duration: 0.9,
+            clipPath: "inset(0 0% 0 0)",
+            duration: 0.7,
             ease: "expo.out",
-            scrollTrigger: {
-              trigger: intro,
-              start: "top 85%",
-              once: true,
-            },
-          }
+          },
+          0
         );
       }
-
-      // Top progress rail: scrubs left → right as the user scrolls through the section
-      if (rail) {
-        gsap.fromTo(
-          rail,
-          { scaleX: 0, transformOrigin: "0% 50%" },
-          {
-            scaleX: 1,
-            ease: "none",
-            scrollTrigger: {
-              trigger: section,
-              start: "top 75%",
-              end: "bottom 75%",
-              scrub: 0.6,
-            },
-          }
+      tl.to(
+        titleWords,
+        {
+          yPercent: 0,
+          duration: 0.9,
+          stagger: 0.035,
+          ease: "expo.out",
+        },
+        0.05
+      );
+      if (body) {
+        tl.to(
+          body,
+          { opacity: 1, y: 0, duration: 0.7, ease: "expo.out" },
+          0.15
         );
       }
+      if (tools) {
+        tl.to(
+          tools,
+          { opacity: 1, y: 0, duration: 0.7, ease: "expo.out" },
+          0.25
+        );
+      }
+    });
 
-      // Each row: index clip-reveal, title word-stagger, body + tools slide up
-      const rows = section.querySelectorAll<HTMLElement>(".approach-row");
+    // Closing footer: fade + slide
+    const closer = section.querySelector<HTMLElement>(".approach-closer");
+    if (closer) {
+      gsap.set(closer, { opacity: 0, y: 12 });
+      gsap.to(closer, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "expo.out",
+        scrollTrigger: {
+          trigger: closer,
+          start: "top 90%",
+          once: true,
+        },
+      });
+    }
+
+    return () => {
+      ScrollTrigger.getAll()
+        .filter((t) => section.contains(t.trigger as Node | null))
+        .forEach((t) => t.kill());
+      // Reset the inline styles GSAP set on these elements
+      gsap.set(headlineWords, { clearProps: "transform" });
+      if (intro) gsap.set(intro, { clearProps: "opacity,transform" });
+      if (railEl) gsap.set(railEl, { clearProps: "transform" });
       rows.forEach((row) => {
         const index = row.querySelector<HTMLElement>(".approach-index");
         const titleWords = row.querySelectorAll<HTMLElement>(
@@ -113,77 +193,12 @@ export function Approach() {
         );
         const body = row.querySelector<HTMLElement>(".approach-body");
         const tools = row.querySelector<HTMLElement>(".approach-tools");
-
-        gsap.set(titleWords, { yPercent: 110 });
-        if (index) gsap.set(index, { clipPath: "inset(0 100% 0 0)" });
-        if (body) gsap.set(body, { opacity: 0, y: 16 });
-        if (tools) gsap.set(tools, { opacity: 0, y: 16 });
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: row,
-            start: "top 82%",
-            once: true,
-          },
-        });
-
-        if (index) {
-          tl.to(
-            index,
-            {
-              clipPath: "inset(0 0% 0 0)",
-              duration: 0.7,
-              ease: "expo.out",
-            },
-            0
-          );
-        }
-        tl.to(
-          titleWords,
-          {
-            yPercent: 0,
-            duration: 0.9,
-            stagger: 0.035,
-            ease: "expo.out",
-          },
-          0.05
-        );
-        if (body) {
-          tl.to(
-            body,
-            { opacity: 1, y: 0, duration: 0.7, ease: "expo.out" },
-            0.15
-          );
-        }
-        if (tools) {
-          tl.to(
-            tools,
-            { opacity: 1, y: 0, duration: 0.7, ease: "expo.out" },
-            0.25
-          );
-        }
+        gsap.set(titleWords, { clearProps: "transform" });
+        if (index) gsap.set(index, { clearProps: "clipPath" });
+        if (body) gsap.set(body, { clearProps: "opacity,transform" });
+        if (tools) gsap.set(tools, { clearProps: "opacity,transform" });
       });
-
-      // Closing footer: fade + slide
-      const closer = section.querySelector(".approach-closer");
-      if (closer) {
-        gsap.set(closer, { opacity: 0, y: 12 });
-        gsap.to(closer, {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: "expo.out",
-          scrollTrigger: {
-            trigger: closer,
-            start: "top 90%",
-            once: true,
-          },
-        });
-      }
-    }, section);
-
-    return () => {
-      ctx.revert();
+      if (closer) gsap.set(closer, { clearProps: "opacity,transform" });
     };
   }, [reduced]);
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import dynamic from "next/dynamic";
 import { SectionsErrorBoundary } from "@/components/SectionsErrorBoundary";
 
@@ -28,6 +29,23 @@ const Contact = dynamic(
 );
 
 export function Sections() {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    let cancelled = false;
+    const refresh = async () => {
+      const mod = await import("gsap/ScrollTrigger");
+      if (cancelled) return;
+      mod.ScrollTrigger.refresh();
+    };
+    const raf = requestAnimationFrame(() => {
+      requestAnimationFrame(refresh);
+    });
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
     <SectionsErrorBoundary>
       <About />

@@ -190,6 +190,16 @@
       right: -5px;
     }
   }
+
+  @media (min-width: 901px) and (max-width: 1280px) {
+    .landing-hero .landing-counter {
+      font-size: 80px;
+    }
+    .landing-hero .landing-pre-loader p {
+      font-size: 48px;
+      line-height: 70px;
+    }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

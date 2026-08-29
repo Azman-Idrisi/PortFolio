@@ -45,7 +45,7 @@ export function Magnetic({
     y.set(0);
   };
 
-  const style = { x: sx, y: sy, display: "inline-block" };
+  const style = { x: sx, y: sy };
 
   if (href) {
     return (

@@ -24,7 +24,7 @@ export function Nav() {
     setScrolled(v > 80);
     const delta = v - lastYRef.current;
     if (Math.abs(delta) > 4) {
-      setHidden(delta < 0 && v > 160 && active !== "top");
+      setHidden(delta > 0 && v > 160 && active !== "top");
       lastYRef.current = v;
     }
   });
@@ -136,12 +136,13 @@ export function Nav() {
             <span className="h-px w-6 bg-paper" />
           </button>
         </div>
-        <motion.div
-          className="absolute inset-x-0 bottom-0 h-px origin-left bg-accent"
-          style={{ scaleX: scrollYProgress }}
-          aria-hidden
-        />
       </motion.header>
+
+      <motion.div
+        className="fixed inset-x-0 top-0 z-[201] h-px origin-left bg-accent pointer-events-none"
+        style={{ scaleX: scrollYProgress }}
+        aria-hidden
+      />
 
       <AnimatePresence>
         {menuOpen && <MobileMenu onClose={() => setMenuOpen(false)} onNav={handleAnchor} />}

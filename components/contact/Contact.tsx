@@ -79,10 +79,12 @@ export function Contact() {
         <div className="mt-16 md:mt-20 flex flex-col items-center gap-4">
           <Magnetic
             onClick={handleCopy}
-            className="group relative font-fraunces text-[clamp(28px,5vw,56px)] leading-[1] text-accent hover:text-paper transition-colors"
+            className="group relative font-fraunces text-[clamp(22px,7vw,56px)] leading-[1.05] text-accent hover:text-paper transition-colors max-w-full px-2 flex flex-col items-center gap-1"
             ariaLabel="Copy email address"
           >
-            {email}
+            <span>{email.split("@")[0]}</span>
+            <span>@</span>
+            <span>{email.split("@")[1]}</span>
           </Magnetic>
 
           <AnimatePresence>

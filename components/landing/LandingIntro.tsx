@@ -30,58 +30,61 @@ export function LandingIntro() {
     const el = rootRef.current;
     if (!el) return;
 
-    const ctx = gsap.context(() => {
-      const digit1 = el.querySelector<HTMLElement>(".landing-digit-1");
-      const digit2 = el.querySelector<HTMLElement>(".landing-digit-2");
-      const digit3 = el.querySelector<HTMLElement>(".landing-digit-3");
-      const progressBar = el.querySelector<HTMLElement>(".landing-progress-bar");
+    const digit1 = el.querySelector<HTMLElement>(".landing-digit-1");
+    const digit2 = el.querySelector<HTMLElement>(".landing-digit-2");
+    const digit3 = el.querySelector<HTMLElement>(".landing-digit-3");
+    const progressBar = el.querySelector<HTMLElement>(".landing-progress-bar");
 
-      if (!digit1 || !digit2 || !digit3 || !progressBar) return;
+    if (!digit1 || !digit2 || !digit3 || !progressBar) return;
 
-      const animate = (digit: HTMLElement, duration: number, delay = 0) => {
-        const numHeight = digit.querySelector<HTMLElement>(".num")!.clientHeight;
-        const totalDistance =
-          (digit.querySelectorAll(".num").length - 1) * numHeight;
+    const tweens: gsap.core.Tween[] = [];
+    const animate = (digit: HTMLElement, duration: number, delay = 0) => {
+      const numHeight = digit.querySelector<HTMLElement>(".num")!.clientHeight;
+      const totalDistance =
+        (digit.querySelectorAll(".num").length - 1) * numHeight;
+      tweens.push(
         gsap.to(digit, {
           y: -totalDistance,
           duration,
           delay,
           ease: "power2.inOut",
+        })
+      );
+    };
+
+    animate(digit3, 5);
+    animate(digit2, 6);
+    animate(digit1, 2, 5);
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        requestAnimationFrame(() => {
+          setVisible(false);
         });
-      };
-
-      animate(digit3, 5);
-      animate(digit2, 6);
-      animate(digit1, 2, 5);
-
-      const tl = gsap.timeline({
-        onComplete: () => {
-          requestAnimationFrame(() => {
-            setVisible(false);
-          });
-        },
-      });
-      tl.to(progressBar, {
-        width: "30%",
-        duration: 2,
-        ease: "power4.inOut",
-      }, 7);
-      tl.to(progressBar, {
-        width: "100%",
-        opacity: 0,
-        duration: 2,
-        ease: "power3.out",
-      }, 8.5);
-      tl.to(el, {
-        xPercent: -100,
-        opacity: 0,
-        duration: 1.2,
-        ease: "power3.inOut",
-      }, 10.7);
-    }, rootRef);
+      },
+    });
+    tl.to(progressBar, {
+      width: "30%",
+      duration: 2,
+      ease: "power4.inOut",
+    }, 7);
+    tl.to(progressBar, {
+      width: "100%",
+      opacity: 0,
+      duration: 2,
+      ease: "power3.out",
+    }, 8.5);
+    tl.to(el, {
+      xPercent: -100,
+      opacity: 0,
+      duration: 1.2,
+      ease: "power3.inOut",
+    }, 10.7);
 
     return () => {
-      ctx.revert();
+      tl.kill();
+      tweens.forEach((t) => t.kill());
+      gsap.set([digit1, digit2, digit3, progressBar, el], { clearProps: "all" });
     };
   }, [mounted, reduced]);
 

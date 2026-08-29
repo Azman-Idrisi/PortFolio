@@ -10,24 +10,28 @@ export function useActiveSection(
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const elements = ids
-      .map((id) => ({ id, el: document.getElementById(id) }))
-      .filter(
-        (e): e is { id: string; el: HTMLElement } => e.el !== null
-      )
-      .sort(
-        (a, b) =>
-          a.el.getBoundingClientRect().top - b.el.getBoundingClientRect().top
-      );
-
-    if (elements.length === 0) return;
+    if (ids.length === 0) return;
 
     const rootMargin = options?.rootMargin ?? "-40% 0px -40% 0px";
     const topMatch = rootMargin.match(/(-?\d+)%/);
-    const topPercent = topMatch ? parseInt(topMatch[1], 10) : -40;
-    const activationLine = (window.innerHeight * topPercent) / 100;
+    const topPercent = topMatch ? Math.abs(parseInt(topMatch[1], 10)) : 40;
+    let activationLine = (window.innerHeight * topPercent) / 100;
+
+    const getSortedElements = () =>
+      ids
+        .map((id) => ({ id, el: document.getElementById(id) }))
+        .filter(
+          (e): e is { id: string; el: HTMLElement } => e.el !== null
+        )
+        .sort(
+          (a, b) =>
+            a.el.getBoundingClientRect().top - b.el.getBoundingClientRect().top
+        );
 
     const computeActive = () => {
+      const elements = getSortedElements();
+      if (elements.length === 0) return;
+      activationLine = (window.innerHeight * topPercent) / 100;
       let best: { id: string; dist: number } | null = null;
       for (const { id, el } of elements) {
         const rect = el.getBoundingClientRect();
@@ -49,10 +53,12 @@ export function useActiveSection(
       });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
     computeActive();
 
     return () => {
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
       if (scrollRaf) cancelAnimationFrame(scrollRaf);
     };
   }, [ids, options?.rootMargin]);
