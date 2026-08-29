@@ -47,7 +47,7 @@ export const projects: Project[] = [
     role: "Architecture · Build",
     description:
       "An event-driven distributed job scheduler for high-throughput backend workflows, designed around reliability and fault tolerance.",
-    thumbnail: "/assets/projects/job-scheduler.webp",
+    thumbnail: "/assets/projects/job.webp",
     technologies: [
       "Node.js",
       "Redis",
@@ -64,7 +64,7 @@ export const projects: Project[] = [
       "Fault tolerance",
       "Event-driven task processing",
     ],
-     projectUrl:
+    projectUrl:
       "https://github.com/Azman-Idrisi/job-scheduler",
   },
   {
@@ -97,7 +97,7 @@ export const projects: Project[] = [
     role: "Build · Maintain",
     description:
       "A student leave-management app for SRM Institute of Science and Technology that simplified the leave-application process.",
-    thumbnail: "/olms.png",
+    thumbnail: "/assets/projects/olms.webp",
     technologies: ["React Native", "Expo", "TypeScript", "GitHub Actions", "CI/CD"],
     features: [
       "Leave request flow",
@@ -133,7 +133,7 @@ export const projects: Project[] = [
       "MongoDB persistence",
       "Automated CI/CD pipeline",
     ],
-      projectUrl: "https://play.google.com/store/apps/details?id=com.taskmate.com",
+    projectUrl: "https://play.google.com/store/apps/details?id=com.taskmate.com",
   },
   {
     id: "resumix",
@@ -163,7 +163,7 @@ export const projects: Project[] = [
     role: "Design · Build",
     description:
       "A privacy-first password manager MVP with a personal vault and JWT authentication.",
-    thumbnail: "/assets/projects/password-manager.webp",
+    thumbnail: "/assets/projects/pass.webp",
     technologies: ["Next.js", "TypeScript", "JWT", "MongoDB", "Zustand"],
     features: [
       "Strong password generation",
@@ -182,7 +182,7 @@ export const projects: Project[] = [
     role: "Build",
     description:
       "A visually captivating website inspired by Zentry, featuring scroll-triggered animations, geometric transitions, and engaging video storytelling.",
-    thumbnail: "/zentry.jpg",
+    thumbnail: "/assets/projects/zentry.webp",
     technologies: ["React", "Tailwind CSS", "Vite", "GSAP"],
     projectUrl: "https://awards-peach.vercel.app",
   },
@@ -195,7 +195,7 @@ export const projects: Project[] = [
     role: "Build",
     description:
       "A modern UI/UX website, developed using React.js and Tailwind CSS, exemplifying modern UI/UX principles.",
-    thumbnail: "/brainwave.jpg",
+    thumbnail: "/assets/projects/brainwave.webp",
     technologies: ["React", "Tailwind CSS", "Vite", "GSAP"],
     projectUrl: "https://brainwave-tau-two.vercel.app/",
   },
@@ -208,7 +208,7 @@ export const projects: Project[] = [
     role: "Build",
     description:
       "A Nike landing page built while learning Tailwind CSS fundamentals, advanced techniques, and theming.",
-    thumbnail: "/nike.png",
+    thumbnail: "/assets/projects/nike.webp",
     technologies: ["React", "Tailwind CSS", "Vite", "GSAP"],
     projectUrl: "https://nike-weld-chi.vercel.app/",
   },
@@ -221,7 +221,7 @@ export const projects: Project[] = [
     role: "Build",
     description:
       "Recreated the Apple iPhone 15 Pro website, combining GSAP animations and Three.js 3D effects.",
-    thumbnail: "/p4.svg",
+    thumbnail: "/assets/projects/apple.webp",
     technologies: ["React", "Tailwind CSS", "Vite", "GSAP"],
     projectUrl: "https://apple-six-ecru.vercel.app/",
   },
@@ -234,7 +234,7 @@ export const projects: Project[] = [
     role: "Build",
     description:
       "A modern, responsive cryptocurrency dashboard that provides real-time market data and visualization for crypto assets.",
-    thumbnail: "/p6.png",
+    thumbnail: "/assets/projects/crypto.webp",
     technologies: ["React", "Tailwind CSS", "Redux", "Node.js"],
     projectUrl: "https://xiv-tech-seven.vercel.app/",
   },

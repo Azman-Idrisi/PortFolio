@@ -34,4 +34,4 @@ export const socials: Social[] = [
 
 export const email = "azman.mohammad.dev@gmail.com";
 export const resumeUrl =
-  "https://drive.google.com/file/d/1JCBAwEZqBxKEHkX7hc4rWE4Qhq4_8jEO/view?usp=sharing";
+  "https://drive.google.com/file/d/1FCSXzx8kSFstIXY-pQ98fuvZDRXaPw-o/view?usp=sharing";
