@@ -6,20 +6,35 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion } from "motion/react";
 import { heroTaglines, heroMeta } from "@/data/content";
 import { Magnetic } from "@/hooks/useMagnetic";
+import { useParallax } from "@/hooks/useParallax";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useMedia } from "@/hooks/useMedia";
+import { HeroParticles } from "@/components/hero/HeroParticles";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+const REVEAL_EVENT = "ma:loader:reveal";
+const CLIP_DUR = 1.1;
+const CLIP_TARGET = "circle(150% at 50% 50%)";
+
 export function Hero() {
   const ref = useRef<HTMLDivElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
   const taglineRef = useRef<HTMLParagraphElement | null>(null);
   const reduced = useReducedMotion();
+  const isDesktop = useMedia("(min-width: 768px)");
+  const revealedRef = useRef(false);
+  useParallax(
+    ref,
+    !reduced && isDesktop
+  );
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    const content = contentRef.current;
+    if (!el || !content) return;
 
     if (reduced) {
       gsap.set(el.querySelectorAll("[data-hero-anim]"), {
@@ -30,7 +45,9 @@ export function Hero() {
       return;
     }
 
-    const tl = gsap.timeline({ delay: 0.2 });
+    gsap.set(content, { clipPath: "circle(0% at 50% 50%)" });
+
+    const tl = gsap.timeline({ paused: true });
 
     tl.fromTo(
       "[data-hero-anim='label']",
@@ -81,7 +98,22 @@ export function Hero() {
       });
     }
 
+    const reveal = () => {
+      if (revealedRef.current) return;
+      revealedRef.current = true;
+      gsap.to(content, {
+        clipPath: CLIP_TARGET,
+        duration: CLIP_DUR,
+        ease: "expo.out",
+        overwrite: true,
+      });
+      tl.play(0);
+    };
+
+    window.addEventListener(REVEAL_EVENT, reveal);
+
     return () => {
+      window.removeEventListener(REVEAL_EVENT, reveal);
       tl.kill();
     };
   }, [reduced]);
@@ -97,93 +129,109 @@ export function Hero() {
       ref={ref}
       className="relative w-full flex flex-col justify-start overflow-hidden pt-24 pb-16 md:pt-32 md:pb-20 px-6 md:px-10"
     >
-      <div className="mx-auto w-full max-w-[1440px]">
+      <HeroParticles />
+
+      <div
+        ref={contentRef}
+        data-hero-content
+        className="relative z-10 flex flex-col justify-start"
+      >
         <div
-          data-hero-anim="label"
-          className="text-[11px] md:text-[12px] font-mono uppercase tracking-[0.18em] text-paper-2"
+          data-parallax="0.08"
+          aria-hidden
+          className="pointer-events-none absolute top-[30%] inset-x-0 text-center font-fraunces text-[28vw] leading-none text-paper/5 select-none will-change-transform"
         >
-          <span className="text-accent">●</span> Mohammad Azman / React Native & Full-Stack — India
+          MA
         </div>
 
-        <h1 className="mt-8 md:mt-12 font-fraunces text-paper font-light leading-[0.85] tracking-[-0.04em]">
-          <span className="block overflow-hidden pr-1">
-            <span
-              data-hero-anim="name-1"
-              className="block text-[15vw] sm:text-[16vw] md:text-[14vw] lg:text-[200px] will-change-transform"
-            >
-              Mohammad
-            </span>
-          </span>
-          <span className="block overflow-hidden pr-1">
-            <span
-              data-hero-anim="name-2"
-              className="block text-[15vw] sm:text-[16vw] md:text-[14vw] lg:text-[200px] will-change-transform text-paper-2"
-            >
-              Azman<span className="text-accent">.</span>
-            </span>
-          </span>
-        </h1>
-
-        <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-end">
-          <p
-            ref={taglineRef}
-            data-hero-anim="tagline"
-            className="md:col-span-6 text-[20px] md:text-[24px] lg:text-[28px] leading-[1.25] text-paper font-fraunces font-light tracking-[-0.01em]"
+        <div className="mx-auto w-full max-w-[1440px]">
+          <div
+            data-hero-anim="label"
+            className="text-[11px] md:text-[12px] font-mono uppercase tracking-[0.18em] text-paper-2"
           >
-            {heroTaglines[0]}
-          </p>
+            <span className="text-accent">●</span> Mohammad Azman / React Native & Full-Stack — India
+          </div>
 
-          <div className="md:col-span-5 md:col-start-8 space-y-4">
+          <h1 data-parallax="-0.05" className="mt-8 md:mt-12 font-fraunces text-paper font-light leading-[0.85] tracking-[-0.04em] will-change-transform">
+            <span className="block overflow-hidden pr-1">
+              <span
+                data-hero-anim="name-1"
+                className="block text-[15vw] sm:text-[16vw] md:text-[14vw] lg:text-[200px] will-change-transform"
+              >
+                Mohammad
+              </span>
+            </span>
+            <span className="block overflow-hidden pr-1">
+              <span
+                data-hero-anim="name-2"
+                className="block text-[15vw] sm:text-[16vw] md:text-[14vw] lg:text-[200px] will-change-transform text-paper-2"
+              >
+                Azman<span className="text-accent">.</span>
+              </span>
+            </span>
+          </h1>
+
+          <div data-parallax="-0.08" className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-end">
             <p
-              data-hero-anim="sub"
-              className="text-[14px] md:text-[15px] text-paper-2 leading-[1.6]"
+              ref={taglineRef}
+              data-hero-anim="tagline"
+              className="md:col-span-6 text-[20px] md:text-[24px] lg:text-[28px] leading-[1.25] text-paper font-fraunces font-light tracking-[-0.01em]"
             >
-              React Native · Next.js · TypeScript · Node · MongoDB.{" "}
-              <span className="text-paper">{heroMeta.publishedApps}</span>.
+              {heroTaglines[0]}
             </p>
 
-            <div
-              data-hero-anim="meta"
-              className="flex flex-wrap items-center gap-4 text-[12px] font-mono uppercase tracking-[0.14em] text-paper-2 pt-2"
-            >
-              <span className="inline-flex items-center gap-2">
-                <span className="h-1 w-1 rounded-full bg-accent" />
-                {heroMeta.based}
-              </span>
-              <span className="h-3 w-px bg-line" />
-              <span>{heroMeta.status}</span>
+            <div className="md:col-span-5 md:col-start-8 space-y-4">
+              <p
+                data-hero-anim="sub"
+                className="text-[14px] md:text-[15px] text-paper-2 leading-[1.6]"
+              >
+                React Native · Next.js · TypeScript · Node · MongoDB.{" "}
+                <span className="text-paper">{heroMeta.publishedApps}</span>.
+              </p>
+
+              <div
+                data-hero-anim="meta"
+                className="flex flex-wrap items-center gap-4 text-[12px] font-mono uppercase tracking-[0.14em] text-paper-2 pt-2"
+              >
+                <span className="inline-flex items-center gap-2">
+                  <span className="h-1 w-1 rounded-full bg-accent" />
+                  {heroMeta.based}
+                </span>
+                <span className="h-3 w-px bg-line" />
+                <span>{heroMeta.status}</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="mt-12 md:mt-16 flex items-center justify-between">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: reduced ? 0 : 1.4, duration: 0.6 }}
-          >
-            <Magnetic
-              href="#work"
-              onClick={handleScrollToWork}
-              className="group inline-flex items-center gap-3 text-[14px] text-paper hover:text-accent transition-colors"
-              ariaLabel="View work"
+          <div data-parallax="-0.1" className="mt-12 md:mt-16 flex items-center justify-between">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: reduced ? 0 : 1.4, duration: 0.6 }}
             >
-              <span className="font-mono uppercase tracking-[0.14em]">View work</span>
-              <span className="inline-block h-px w-12 bg-current group-hover:w-16 transition-all duration-300" />
-              <span>↓</span>
-            </Magnetic>
-          </motion.div>
+              <Magnetic
+                href="#work"
+                onClick={handleScrollToWork}
+                className="group inline-flex items-center gap-3 text-[14px] text-paper hover:text-accent transition-colors"
+                ariaLabel="View work"
+              >
+                <span className="font-mono uppercase tracking-[0.14em]">View work</span>
+                <span className="inline-block h-px w-12 bg-current group-hover:w-16 transition-all duration-300" />
+                <span>↓</span>
+              </Magnetic>
+            </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: reduced ? 0 : 1.5, duration: 0.6 }}
-            className="hidden md:block"
-          >
-            <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-paper-2">
-              Scroll to explore
-            </span>
-          </motion.div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: reduced ? 0 : 1.5, duration: 0.6 }}
+              className="hidden md:block"
+            >
+              <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-paper-2">
+                Scroll to explore
+              </span>
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>

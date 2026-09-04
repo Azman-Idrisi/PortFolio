@@ -5,7 +5,9 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { experience } from "@/data/experience";
 import { SectionLabel } from "@/components/primitives/SectionLabel";
+import { useParallax } from "@/hooks/useParallax";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useMedia } from "@/hooks/useMedia";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -14,6 +16,8 @@ if (typeof window !== "undefined") {
 export function Experience() {
   const ref = useRef<HTMLDivElement | null>(null);
   const reduced = useReducedMotion();
+  const isDesktop = useMedia("(min-width: 768px)");
+  useParallax(ref, !reduced && isDesktop);
 
   useEffect(() => {
     const el = ref.current;
@@ -60,7 +64,7 @@ export function Experience() {
           Experience
         </SectionLabel>
 
-        <h2 className="font-fraunces text-[clamp(40px,6vw,96px)] leading-[1] text-paper font-light tracking-[-0.03em] max-w-[20ch] mb-20">
+        <h2 data-parallax="-0.04" className="font-fraunces text-[clamp(40px,6vw,96px)] leading-[1] text-paper font-light tracking-[-0.03em] max-w-[20ch] mb-20 will-change-transform">
           Where I&apos;ve worked.
         </h2>
 

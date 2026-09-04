@@ -8,7 +8,9 @@ import { socials, email, resumeUrl } from "@/data/socials";
 import { SectionLabel } from "@/components/primitives/SectionLabel";
 import { SocialIcon } from "@/components/primitives/SocialIcon";
 import { Magnetic } from "@/hooks/useMagnetic";
+import { useParallax } from "@/hooks/useParallax";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useMedia } from "@/hooks/useMedia";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -18,7 +20,9 @@ export function Contact() {
   const ref = useRef<HTMLDivElement | null>(null);
   const headlineRef = useRef<HTMLHeadingElement | null>(null);
   const reduced = useReducedMotion();
+  const isDesktop = useMedia("(min-width: 768px)");
   const [copied, setCopied] = useState(false);
+  useParallax(ref, !reduced && isDesktop);
 
   useEffect(() => {
     const el = ref.current;
@@ -69,12 +73,14 @@ export function Contact() {
           Contact
         </SectionLabel>
 
-        <h2
-          ref={headlineRef}
-          className="font-fraunces text-[clamp(56px,12vw,200px)] leading-[0.95] text-paper font-light tracking-[-0.04em] max-w-[14ch]"
-        >
-          Let&apos;s build something.
-        </h2>
+        <div data-parallax="-0.03" className="w-full flex justify-center will-change-transform">
+          <h2
+            ref={headlineRef}
+            className="font-fraunces text-[clamp(56px,12vw,200px)] leading-[0.95] text-paper font-light tracking-[-0.04em] max-w-[14ch]"
+          >
+            Let&apos;s build something.
+          </h2>
+        </div>
 
         <div className="mt-16 md:mt-20 flex flex-col items-center gap-4">
           <Magnetic

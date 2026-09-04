@@ -103,6 +103,23 @@
     contain: strict;
     will-change: transform;
   }
+
+  .hero-canvas {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 calc(clamp(56px, 7vw, 90px)),
+      #000 calc(100% - clamp(56px, 7vw, 90px)),
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 calc(clamp(56px, 7vw, 90px)),
+      #000 calc(100% - clamp(56px, 7vw, 90px)),
+      transparent 100%
+    );
+  }
 }
 
 @layer components {

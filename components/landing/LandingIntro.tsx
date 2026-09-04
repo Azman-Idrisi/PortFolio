@@ -32,10 +32,16 @@ const REAL_TOTAL =
 const FAILSAFE_MS = (REAL_TOTAL + CFG.FAILSAFE_BUFFER) * 1000;
 
 const DOT_STATES = [".", "..", "...", ""];
+const REVEAL_EVENT = "ma:loader:reveal";
+const dispatchReveal = () => {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent(REVEAL_EVENT));
+};
 
 export function LandingIntro() {
   const rootRef = useRef<HTMLElement | null>(null);
   const doneRef = useRef(false);
+  const revealDispatchedRef = useRef(false);
   const reduced = useReducedMotion();
   const [visible, setVisible] = useState(true);
   const [mounted, setMounted] = useState(false);
@@ -53,6 +59,7 @@ export function LandingIntro() {
     const el = rootRef.current;
     if (!el) return;
     doneRef.current = false;
+    revealDispatchedRef.current = false;
 
     const patternCell = el.querySelector<HTMLElement>("[data-preloader-pattern]");
     const percentEl = el.querySelector<HTMLElement>("[data-preloader-percent]");
@@ -101,6 +108,12 @@ export function LandingIntro() {
       if (doneRef.current) return;
       doneRef.current = true;
       requestAnimationFrame(() => setVisible(false));
+    };
+
+    const fireReveal = () => {
+      if (revealDispatchedRef.current) return;
+      revealDispatchedRef.current = true;
+      dispatchReveal();
     };
 
     const fillState = { v: 0 };
@@ -169,17 +182,23 @@ export function LandingIntro() {
 
     masterTl.to({}, { duration: CFG.SETTLE_DUR });
 
+    masterTl.addLabel("riseStart");
+
+    masterTl.call(fireReveal, undefined, "riseStart");
+
     masterTl.to(
       el,
       {
         yPercent: -100,
         duration: CFG.RISE_DUR,
         ease: "cctpOut",
-      }
+      },
+      "riseStart"
     );
 
     const failsafeTimer = setTimeout(() => {
       if (doneRef.current) return;
+      fireReveal();
       masterTl.kill();
       finish();
     }, FAILSAFE_MS);
