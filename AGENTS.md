@@ -18,8 +18,8 @@ Next.js 16 (App Router) + React 19 + TypeScript portfolio for **Mohammad Azman**
 - **SmoothScroll**: `app/layout.tsx` wraps children in `<SmoothScroll>` which calls `useSmoothScroll` — initializes Lenis + GSAP ScrollTrigger sync, gated by `prefers-reduced-motion`.
 - **Fonts**: `next/font/google` for Fraunces (variable, opsz axis), Inter, JetBrains Mono. `next/font/local` for Zentry (`public/fonts/zentry-regular.woff2`).
 - **Path alias**: `@/*` → `./*`
-- **Dark-only theme** — no theme provider. CSS variables in `app/globals.css` `@theme` block. The yellow landing intro is a fully-namespaced exception (`.landing-*` block in `globals.css`); it does not use the ink/paper tokens.
-- **Landing intro**: a full-viewport fixed yellow overlay (`<LandingIntro />`) sits at z=250 on top of the portfolio and runs a ~11.9s GSAP sequence: three odometer wheels count to 100%, a progress bar fills, then the whole overlay slides left (`xPercent: -100`) + fades out to reveal the portfolio underneath. No images, no nav/headline, no sessionStorage gate. It plays on every page load.
+- **Dark-only theme** — no theme provider. CSS variables in `app/globals.css` `@theme` block. The landing intro is a fully-namespaced exception (`.landing-*` block in `globals.css`); it uses only the paper/ink tokens for its cream/ink cells, plus an inline-SVG cross pattern for texture — nothing else from the dark theme.
+- **Landing intro**: a full-viewport fixed overlay (`<LandingIntro />`) sits at z=250 on top of the portfolio and runs a sstr-style 2×2 grid preloader: brand cell (top-left, ink, `// MA` + `// PLEASE WAIT` / `// LOADING...`), pattern cell (top-right, cream, `0%` counter + blinking square, fill driven by `--preloader-load` CSS var via the 51-point `fakeLoadEase` curve in `lib/fakeLoadEase.ts`), and two annotation cards (bottom-left `// INITIALIZING` + square mark, bottom-right `// CALIBRATING` + rotated square mark). Reveal sequence: overlay (initially sized to pattern cell, with `.preloader__overlay-fill` clone so the cell→overlay handoff is visually seamless) squeezes left 1.4s → cards drop y 80% + fade 0.5s staggered 0.1s → overlay expands down 0.9s → settle 0.4s → whole overlay rises `yPercent: -100` 1.4s to reveal the dark portfolio underneath. All four reveal tweens use the `cctpOut` custom ease (cubic-bezier `0.625, 0.05, 0, 1`, registered once via `CustomEase.create` at module load) — fast launch, long glide, mirrors sstr. A failsafe timer (REAL_TOTAL + 4s = 13.2s) force-unmounts if tweens get killed. No Barba, no sessionStorage gate, no images, no per-cell headings. Plays on every page load. Total ~8s. Timing constants live in `CFG` at the top of `LandingIntro.tsx`.
 
 ## File Tree (key paths)
 ```
@@ -40,13 +40,14 @@ components/
   experience/Experience.tsx
   contact/Contact.tsx
   cursor/Cursor.tsx
-  landing/LandingIntro.tsx  yellow ~11.9s landing overlay (odometer → progress bar → slide-left+fade)
+  landing/LandingIntro.tsx  2×2 grid preloader (brand + pattern + 2 cards → overlay squeeze/expand → rise-up)
   primitives/         Button.tsx, Tag.tsx, Meta.tsx, Divider.tsx, SectionLabel.tsx, Marquee.tsx, RevealText.tsx, SocialIcon.tsx
 hooks/
   useSmoothScroll.ts  Lenis + GSAP integration
   useMagnetic.tsx     magnetic hover wrapper
   useUrlSyncedProject.ts  ?project=<slug> deep-link
   useActiveSection.ts IntersectionObserver-based active section
+  useParallax.ts     data-parallax scroll parallax (see Parallax convention below)
   useReducedMotion.ts
   useMedia.ts
 lib/
@@ -74,6 +75,7 @@ public/
   - Do not introduce new `py-[clamp(...)]` values; reuse these or add a new utility to `globals.css`.
 - **Hero height**: `min-h-screen` and `justify-center` are intentionally NOT used. The hero sizes to its content (`pt-24 pb-16 md:pt-32 md:pb-20 justify-start`). Don't re-add `min-h-screen` — it duplicates the bottom of an already-tall stack and creates the dead-zone problem.
 - **Marquee rhythm**: `Marquee.tsx` uses `h-12` on the outer overflow wrapper AND on each text span, plus `leading-none`. The two heights must stay in sync; the inner span `h-12` is what prevents vertical clipping. The wrapper's `h-12` is what gives the GSAP translate a stable box to animate within.
+- **Parallax convention**: `hooks/useParallax.ts` — call `useParallax(ref, !reduced && isDesktop)` in a section component, then tag elements with `data-parallax="<speed>"`. Speed sign = direction: positive races ahead (foreground, e.g. hero ghost `MA` at 0.08), negative lags behind (background, e.g. hero h1 -0.05, section h2s -0.04). Travel = ±`vh * speed`, symmetric from `top bottom` to `bottom top`, scrubbed. Gated by `prefers-reduced-motion` + `min-width: 768px` (off on mobile). Never put `data-parallax` on an element that already has a reveal tween animating `y` — wrap it in a parent instead (see Contact h2). TechStack is excluded (already pin+scrub).
 - **ESLint**: zero warnings policy. The flat config in `eslint.config.mjs` uses `nextPlugin.configs.recommended` + `nextPlugin.configs["core-web-vitals"]` + `tseslint.configs.recommended` + `eslint-plugin-react-hooks`. No `FlatCompat` (causes circular-reference errors).
 
 ## Gotchas
@@ -86,11 +88,10 @@ public/
 - **Fraunces** must use `weight` omitted (variable font with `axes: ["opsz"]`) — specifying both `weight` array and `axes` causes a build error.
 - **Lenis + GSAP** integration requires `gsap.ticker.add((t) => lenis.raf(t * 1000))` and `gsap.ticker.lagSmoothing(0)`. ScrollTrigger also needs `lenis.on("scroll", ScrollTrigger.update)`.
 - **Cursor** is gated by `useMedia("(pointer: fine)")` and `useReducedMotion`. Hidden on touch.
-- **Reduced motion**: `useSmoothScroll` no-ops, TechStack falls back to vertical stack, LandingIntro unmounts immediately (skips the 13.2s sequence), drawer uses 150ms fade, no auto-open of WalletMate.
-- **LandingIntro z-index**: 250 — sits above the existing `<Nav />` (z=200) and `<Cursor />` (z=200). The overlay is inline in the React tree (not a portal), so StrictMode double-mount is handled by `gsap.context(rootRef)` + `ctx.revert()` on cleanup. `requestAnimationFrame` defers `setVisible(false)` so unmount happens in a clean commit phase.
+- **Reduced motion**: `useSmoothScroll` no-ops, TechStack falls back to vertical stack, LandingIntro unmounts immediately (skips the ~8s sequence), drawer uses 150ms fade, no auto-open of WalletMate, parallax disabled entirely (useParallax gated).
+- **LandingIntro z-index**: 250 — sits above the existing `<Nav />` (z=200) and `<Cursor />` (z=200). The overlay is inline in the React tree (not a portal), so StrictMode double-mount is handled by tween kill + `gsap.set(..., { clearProps: "all" })` on cleanup (no `gsap.context` — plain tween registry). `requestAnimationFrame` defers `setVisible(false)` so unmount happens in a clean commit phase. A `doneRef` flag dedupes the natural `onComplete` vs the failsafe timer.
 - **Lenis StrictMode guard**: `useSmoothScroll.ts` does **not** reset `initialized.current` in cleanup — that caused double-init and broken scroll in dev. The singleton in `lib/lenis.ts` prevents true duplicates; the guard was redundant and harmful.
-- **Reduced motion**: `useSmoothScroll` no-ops, TechStack falls back to vertical stack, LandingIntro unmounts immediately (skips the ~11.9s sequence), drawer uses 150ms fade, no auto-open of WalletMate.
-- **No test suite** configured.
+- **No test runner** — there is no `npm test` script and no test-framework dep. Pure functions get tested via Node's built-in `node:test` + `--experimental-strip-types` (e.g. `lib/fakeLoadEase.test.ts`). Run a single test file: `node --experimental-strip-types --test lib/<file>.test.ts`. Test files import with the explicit `.ts` extension; `tsconfig.json` has `allowImportingTsExtensions: true` to make `tsc --noEmit` accept that. Keep the seam at pure functions only — React components and GSAP-driven side effects are not under test.
 
 ## Pending / TODO
 - `app/opengraph-image.tsx` — generated OG image not yet implemented

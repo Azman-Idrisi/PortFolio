@@ -2,17 +2,40 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import { CustomEase } from "gsap/CustomEase";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { fakeLoadEase } from "@/lib/fakeLoadEase";
 
-const DIGIT_2_NUMS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-const DIGIT_3_NUMS: number[] = [
-  ...Array.from({ length: 10 }, (_, i) => i),
-  ...Array.from({ length: 10 }, (_, i) => i),
-  0,
-];
+gsap.registerPlugin(CustomEase);
+CustomEase.create("cctpOut", "0.625, 0.05, 0, 1");
+
+const CFG = {
+  FILL_DUR: 4.5,
+  SQUEEZE_DUR: 1.4,
+  CARD_DOWN_DUR: 0.5,
+  CARD_DOWN_STAGGER: 0.1,
+  PATTERN_DOWN_DUR: 0.9,
+  SETTLE_DUR: 0.4,
+  RISE_DUR: 1.4,
+  FAILSAFE_BUFFER: 4,
+  DOT_INTERVAL_MS: 350,
+  READY_LABEL: "READY",
+};
+const REAL_TOTAL =
+  CFG.FILL_DUR +
+  CFG.SQUEEZE_DUR +
+  CFG.CARD_DOWN_DUR +
+  CFG.CARD_DOWN_STAGGER +
+  CFG.PATTERN_DOWN_DUR +
+  CFG.SETTLE_DUR +
+  CFG.RISE_DUR;
+const FAILSAFE_MS = (REAL_TOTAL + CFG.FAILSAFE_BUFFER) * 1000;
+
+const DOT_STATES = [".", "..", "...", ""];
 
 export function LandingIntro() {
   const rootRef = useRef<HTMLElement | null>(null);
+  const doneRef = useRef(false);
   const reduced = useReducedMotion();
   const [visible, setVisible] = useState(true);
   const [mounted, setMounted] = useState(false);
@@ -29,62 +52,154 @@ export function LandingIntro() {
     }
     const el = rootRef.current;
     if (!el) return;
+    doneRef.current = false;
 
-    const digit1 = el.querySelector<HTMLElement>(".landing-digit-1");
-    const digit2 = el.querySelector<HTMLElement>(".landing-digit-2");
-    const digit3 = el.querySelector<HTMLElement>(".landing-digit-3");
-    const progressBar = el.querySelector<HTMLElement>(".landing-progress-bar");
+    const patternCell = el.querySelector<HTMLElement>("[data-preloader-pattern]");
+    const percentEl = el.querySelector<HTMLElement>("[data-preloader-percent]");
+    const overlayEl = el.querySelector<HTMLElement>("[data-preloader-overlay]");
+    const cardLeft = el.querySelector<HTMLElement>('[data-preloader-card="left"]');
+    const cardRight = el.querySelector<HTMLElement>('[data-preloader-card="right"]');
+    const cardLeftHead = cardLeft?.querySelector<HTMLElement>(".card-head") ?? null;
+    const cardLeftIllu = cardLeft?.querySelector<HTMLElement>(".card-illu") ?? null;
+    const cardRightHead = cardRight?.querySelector<HTMLElement>(".card-head") ?? null;
+    const cardRightIllu = cardRight?.querySelector<HTMLElement>(".card-illu") ?? null;
 
-    if (!digit1 || !digit2 || !digit3 || !progressBar) return;
+    if (
+      !patternCell ||
+      !percentEl ||
+      !overlayEl ||
+      !cardLeftHead ||
+      !cardLeftIllu ||
+      !cardRightHead ||
+      !cardRightIllu
+    ) {
+      return;
+    }
 
-    const tweens: gsap.core.Tween[] = [];
-    const animate = (digit: HTMLElement, duration: number, delay = 0) => {
-      const numHeight = digit.querySelector<HTMLElement>(".num")!.clientHeight;
-      const totalDistance =
-        (digit.querySelectorAll(".num").length - 1) * numHeight;
-      tweens.push(
-        gsap.to(digit, {
-          y: -totalDistance,
-          duration,
-          delay,
-          ease: "power2.inOut",
-        })
-      );
+    const parentRect = el.getBoundingClientRect();
+    const patternRect = patternCell.getBoundingClientRect();
+
+    gsap.set(overlayEl, {
+      top: patternRect.top - parentRect.top,
+      left: patternRect.left - parentRect.left,
+      width: patternRect.width,
+      height: patternRect.height,
+    });
+
+    const dots = Array.from(
+      el.querySelectorAll<HTMLElement>("[data-preloader-dots]")
+    );
+    let dotsI = 0;
+    const dotsTimer = setInterval(() => {
+      dotsI = (dotsI + 1) % DOT_STATES.length;
+      dots.forEach((d) => {
+        d.textContent = DOT_STATES[dotsI];
+      });
+    }, CFG.DOT_INTERVAL_MS);
+
+    const finish = () => {
+      if (doneRef.current) return;
+      doneRef.current = true;
+      requestAnimationFrame(() => setVisible(false));
     };
 
-    animate(digit3, 5);
-    animate(digit2, 6);
-    animate(digit1, 2, 5);
+    const fillState = { v: 0 };
+    const masterTl = gsap.timeline({ onComplete: finish });
 
-    const tl = gsap.timeline({
-      onComplete: () => {
-        requestAnimationFrame(() => {
-          setVisible(false);
-        });
+    masterTl.to(
+      fillState,
+      {
+        v: 100,
+        duration: CFG.FILL_DUR,
+        ease: fakeLoadEase,
+        onUpdate: () => {
+          const v = fillState.v;
+          patternCell.style.setProperty("--preloader-load", (v / 100).toFixed(4));
+          percentEl.textContent = Math.round(v) + "%";
+        },
       },
-    });
-    tl.to(progressBar, {
-      width: "30%",
-      duration: 2,
-      ease: "power4.inOut",
-    }, 7);
-    tl.to(progressBar, {
-      width: "100%",
-      opacity: 0,
-      duration: 2,
-      ease: "power3.out",
-    }, 8.5);
-    tl.to(el, {
-      xPercent: -100,
-      opacity: 0,
-      duration: 1.2,
-      ease: "power3.inOut",
-    }, 10.7);
+      0
+    );
+
+    masterTl.addLabel("revealStart", CFG.FILL_DUR);
+
+    masterTl.set(overlayEl, { display: "flex" }, "revealStart");
+    masterTl.set(patternCell, { autoAlpha: 0 }, "revealStart");
+    masterTl.call(
+      () => {
+        clearInterval(dotsTimer);
+      },
+      undefined,
+      "revealStart"
+    );
+
+    masterTl.to(
+      overlayEl,
+      {
+        left: 0,
+        width: parentRect.width,
+        duration: CFG.SQUEEZE_DUR,
+        ease: "cctpOut",
+      },
+      "revealStart"
+    );
+
+    masterTl.to(
+      [cardLeftHead, cardLeftIllu, cardRightHead, cardRightIllu],
+      {
+        y: "80%",
+        autoAlpha: 0,
+        duration: CFG.CARD_DOWN_DUR,
+        stagger: CFG.CARD_DOWN_STAGGER,
+        ease: "cctpOut",
+      },
+      "revealStart+=0.1"
+    );
+
+    masterTl.to(
+      overlayEl,
+      {
+        top: 0,
+        height: parentRect.height,
+        duration: CFG.PATTERN_DOWN_DUR,
+        ease: "cctpOut",
+      },
+      ">-0.1"
+    );
+
+    masterTl.to({}, { duration: CFG.SETTLE_DUR });
+
+    masterTl.to(
+      el,
+      {
+        yPercent: -100,
+        duration: CFG.RISE_DUR,
+        ease: "cctpOut",
+      }
+    );
+
+    const failsafeTimer = setTimeout(() => {
+      if (doneRef.current) return;
+      masterTl.kill();
+      finish();
+    }, FAILSAFE_MS);
 
     return () => {
-      tl.kill();
-      tweens.forEach((t) => t.kill());
-      gsap.set([digit1, digit2, digit3, progressBar, el], { clearProps: "all" });
+      masterTl.kill();
+      clearInterval(dotsTimer);
+      clearTimeout(failsafeTimer);
+      gsap.set(el, { clearProps: "all" });
+      gsap.set(
+        [
+          patternCell,
+          overlayEl,
+          cardLeftHead,
+          cardLeftIllu,
+          cardRightHead,
+          cardRightIllu,
+        ],
+        { clearProps: "all" }
+      );
     };
   }, [mounted, reduced]);
 
@@ -96,30 +211,73 @@ export function LandingIntro() {
       className="landing-hero"
       aria-label="Loading — Mohammad Azman"
     >
-      <div className="landing-pre-loader">
-        <p>Loading</p>
-        <div className="landing-counter">
-          <div className="landing-digit-1">
-            <div className="num">0</div>
-            <div className="num offset">1</div>
+      <div className="preloader__grid">
+        <div className="preloader__cell preloader__brand">
+          <div className="preloader__head">
+            <div className="preloader__logo">// MA</div>
+            <div className="preloader__status">
+              <span>// PLEASE WAIT</span>
+              <span>
+                // LOADING<span data-preloader-dots>.</span>
+              </span>
+            </div>
           </div>
-          <div className="landing-digit-2">
-            {DIGIT_2_NUMS.map((n, i) => (
-              <div className={i === 1 ? "num offset" : "num"} key={i}>
-                {n}
-              </div>
-            ))}
-          </div>
-          <div className="landing-digit-3">
-            {DIGIT_3_NUMS.map((n, i) => (
-              <div className={i === 1 ? "num offset" : "num"} key={i}>
-                {n}
-              </div>
-            ))}
-          </div>
-          <div className="landing-digit-4">%</div>
         </div>
-        <div className="landing-progress-bar" />
+
+        <div className="preloader__cell preloader__pattern" data-preloader-pattern>
+          <div className="preloader__fill" />
+          <div className="preloader__progress">
+            <span className="preloader__square" />
+            <span data-preloader-percent className="preloader__percent">
+              0%
+            </span>
+          </div>
+        </div>
+
+        <div className="preloader__cell preloader__card" data-preloader-card="left">
+          <div className="card-head">
+            <div className="annotation">
+              <span className="annotation__dot" />
+              <span className="annotation__text">
+                // INITIALIZING<span data-preloader-dots>.</span>
+              </span>
+            </div>
+          </div>
+          <div className="card-illu" data-preloader-illu="left">
+            <div className="shape-mark shape-mark--left" />
+          </div>
+        </div>
+
+        <div className="preloader__cell preloader__card" data-preloader-card="right">
+          <div className="card-head">
+            <div className="annotation">
+              <span className="annotation__dot" />
+              <span className="annotation__text">
+                // CALIBRATING<span data-preloader-dots>.</span>
+              </span>
+            </div>
+          </div>
+          <div className="card-illu" data-preloader-illu="right">
+            <div className="shape-mark shape-mark--right" />
+          </div>
+        </div>
+      </div>
+
+      <div
+        className="preloader__overlay"
+        data-preloader-overlay
+        aria-hidden="true"
+      >
+        <div className="preloader__overlay-fill" />
+        <div className="preloader__progress">
+          <span className="preloader__square" />
+          <span
+            data-preloader-overlay-percent
+            className="preloader__percent"
+          >
+            {CFG.READY_LABEL}
+          </span>
+        </div>
       </div>
     </section>
   );
