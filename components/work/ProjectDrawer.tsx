@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Project } from "@/data/projects";
 import { Meta } from "@/components/primitives/Meta";
 import { Button } from "@/components/primitives/Button";
@@ -50,6 +51,7 @@ export function ProjectDrawer({ project, isOpen }: ProjectDrawerProps) {
       initial={false}
       animate={{ height }}
       transition={{ duration: 0.5, ease: EASE }}
+      onAnimationComplete={() => ScrollTrigger.refresh()}
       style={{ overflow: "hidden" }}
     >
       <div

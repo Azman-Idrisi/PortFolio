@@ -92,7 +92,7 @@ export const projects: Project[] = [
     id: "srm-olms",
     number: "04",
     name: "SRM Hostel OLMS",
-    category: "Mobile · Student Platform",
+    category: "Mobile · Student App",
     year: "2024",
     role: "Build · Maintain",
     description:

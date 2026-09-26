@@ -85,7 +85,7 @@ export function Hero() {
         "-=0.4"
       );
 
-    if (taglineRef.current) {
+    const taglineST = taglineRef.current &&
       ScrollTrigger.create({
         trigger: el,
         start: "top top",
@@ -96,7 +96,6 @@ export function Hero() {
           taglineRef.current!.style.opacity = String(Math.max(0.3, v));
         },
       });
-    }
 
     const reveal = () => {
       if (revealedRef.current) return;
@@ -115,6 +114,8 @@ export function Hero() {
     return () => {
       window.removeEventListener(REVEAL_EVENT, reveal);
       tl.kill();
+      taglineST?.kill();
+      gsap.set(content, { clearProps: "clipPath" });
     };
   }, [reduced]);
 
@@ -139,7 +140,7 @@ export function Hero() {
         <div
           data-parallax="0.08"
           aria-hidden
-          className="pointer-events-none absolute top-[30%] inset-x-0 text-center font-fraunces text-[28vw] leading-none text-paper/5 select-none will-change-transform"
+          className="pointer-events-none absolute top-[30%] inset-x-0 text-center font-fraunces text-[28vw] leading-none text-paper/[0.03] select-none will-change-transform"
         >
           MA
         </div>
@@ -197,7 +198,7 @@ export function Hero() {
                   <span className="h-1 w-1 rounded-full bg-accent" />
                   {heroMeta.based}
                 </span>
-                <span className="h-3 w-px bg-line" />
+                <span className="hidden sm:block h-3 w-px bg-line" />
                 <span>{heroMeta.status}</span>
               </div>
             </div>

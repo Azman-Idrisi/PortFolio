@@ -43,7 +43,7 @@ export function ProjectRow({ project, isOpen, onToggle, index }: ProjectRowProps
 
         <span
           className={cn(
-            "col-span-10 md:col-span-5 font-fraunces text-[24px] md:text-[36px] lg:text-[44px] leading-[1.05] font-light tracking-[-0.02em] transition-colors duration-300",
+            "col-span-8 md:col-span-5 font-fraunces text-[24px] md:text-[36px] lg:text-[44px] leading-[1.05] font-light tracking-[-0.02em] transition-colors duration-300",
             hovered || isOpen ? "text-accent" : "text-paper"
           )}
         >
@@ -68,11 +68,11 @@ export function ProjectRow({ project, isOpen, onToggle, index }: ProjectRowProps
             "order-last md:order-none"
           )}
         >
-          {project.category} · {project.role} · {project.year}
+          {`${project.category} · ${project.role} · ${project.year}`.split(" · ").join(" · ")}
         </span>
 
         <span
-          className="relative col-span-12 md:col-span-1 text-right font-fraunces text-2xl"
+          className="relative col-span-2 md:col-span-1 text-right font-fraunces text-2xl"
           aria-hidden="true"
         >
           <motion.span

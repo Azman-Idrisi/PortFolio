@@ -40,6 +40,8 @@ export function TechStack() {
         anticipatePin: 1,
       },
     });
+    // Sections mount async; the pin spacer shifts everything below, so re-measure siblings.
+    ScrollTrigger.refresh();
 
     return () => {
       tween.scrollTrigger?.kill();
@@ -53,7 +55,7 @@ export function TechStack() {
       ref={sectionRef}
       className="relative w-full border-t border-line bg-ink"
     >
-      <div className="mx-auto max-w-[1440px] px-6 md:px-10 section-pad-y-sm">
+      <div className="px-6 md:px-10 section-pad-y-sm"><div className="mx-auto max-w-[1440px]">
         <SectionLabel index="03" className="mb-12">
           Practice
         </SectionLabel>
@@ -61,12 +63,13 @@ export function TechStack() {
         <h2 className="font-fraunces text-[clamp(40px,6vw,96px)] leading-[1] text-paper font-light tracking-[-0.03em] max-w-[18ch]">
           What I work with, day to day.
         </h2>
+        </div>
       </div>
 
       <div className="tech-track overflow-x-clip overflow-y-visible">
         <div
           ref={trackRef}
-          className="flex flex-col md:flex-row md:flex-nowrap items-stretch gap-12 md:gap-12 px-6 md:px-10 pb-[clamp(64px,10vw,140px)] pt-2 will-change-transform"
+          className="flex flex-col md:flex-row md:flex-nowrap items-stretch gap-12 md:gap-12 px-6 md:px-10 pb-12 md:pb-16 pt-2 will-change-transform"
           style={{ width: "100%" }}
         >
           {techPanels.map((panel, i) => (
@@ -105,7 +108,7 @@ export function TechStack() {
                 ))}
               </ul>
 
-              <div className="mt-auto pt-8 font-mono text-[12px] uppercase tracking-[0.18em] text-paper-2 flex items-center gap-3">
+              <div className="pt-4 font-mono text-[12px] uppercase tracking-[0.18em] text-paper-2 flex items-center gap-3">
                 <span className="h-px w-8 bg-accent" />
                 <span>Panel {String(i + 1).padStart(2, "0")} / {String(techPanels.length + 1).padStart(2, "0")}</span>
               </div>
@@ -144,7 +147,7 @@ export function TechStack() {
               keep a product running once it&apos;s shipped.
             </p>
 
-            <div className="mt-auto pt-8 font-mono text-[12px] uppercase tracking-[0.18em] text-paper-2 flex items-center gap-3">
+            <div className="pt-4 font-mono text-[12px] uppercase tracking-[0.18em] text-paper-2 flex items-center gap-3">
               <span className="h-px w-8 bg-accent" />
               <span>Panel {String(techPanels.length + 1).padStart(2, "0")} / {String(techPanels.length + 1).padStart(2, "0")}</span>
             </div>

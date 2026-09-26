@@ -9,7 +9,7 @@
   --color-paper-2: #a8a39a;
 
   --color-accent: #e8ff8b;
-  --color-line: rgba(255, 255, 255, 0.08);
+  --color-line: rgba(255, 255, 255, 0.12);
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-fraunces: var(--font-fraunces), ui-serif, Georgia, serif;
@@ -61,7 +61,7 @@
 
   .section-pad-y {
     padding-top: clamp(64px, 10vw, 140px);
-    padding-bottom: clamp(64px, 10vw, 140px);
+    padding-bottom: clamp(48px, 7vw, 96px);
   }
 
   .section-pad-y-sm {
@@ -353,4 +353,10 @@
     transition-duration: 0.15s !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Custom cursor active: hide the native pointer so only one cursor shows */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
 }

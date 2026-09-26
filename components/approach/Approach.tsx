@@ -223,7 +223,7 @@ export function Approach() {
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 mb-16">
           <h2 className="md:col-span-8 font-fraunces text-[clamp(40px,6vw,96px)] leading-[1] text-paper font-light tracking-[-0.03em] max-w-[18ch]">
-            <span className="approach-headline block overflow-hidden">
+            <span className="approach-headline block">
               <span className="block">
                 {headlineWords.map(({ seg, isSpace, key }) =>
                   isSpace ? (
@@ -231,7 +231,7 @@ export function Approach() {
                   ) : (
                     <span
                       key={key}
-                      className="inline-block overflow-hidden align-bottom"
+                      className="inline-block overflow-hidden align-bottom pb-[0.12em] -mb-[0.12em]"
                     >
                       <span className="approach-word inline-block will-change-transform">
                         {seg}
@@ -265,7 +265,7 @@ export function Approach() {
                   {s.index}
                 </div>
 
-                <h3 className="approach-row-title md:col-span-3 md:flex md:items-center font-fraunces text-[28px] md:text-[36px] leading-[1.05] text-paper font-light tracking-[-0.02em] overflow-hidden">
+                <h3 className="approach-row-title md:col-span-3 md:flex md:items-center font-fraunces text-[28px] md:text-[36px] leading-[1.05] text-paper font-light tracking-[-0.02em]">
                   <span className="block">
                     {titleWords.map(({ seg, isSpace, key }) =>
                       isSpace ? (
@@ -273,7 +273,7 @@ export function Approach() {
                       ) : (
                         <span
                           key={key}
-                          className="inline-block overflow-hidden align-bottom"
+                          className="inline-block overflow-hidden align-bottom pb-[0.12em] -mb-[0.12em]"
                         >
                           <span className="approach-word inline-block will-change-transform">
                             {seg}

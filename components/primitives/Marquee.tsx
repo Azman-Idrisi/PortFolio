@@ -22,16 +22,12 @@ export function Marquee({
     const el = trackRef.current;
     if (!el) return;
 
-    const half = el.scrollWidth / 2;
-    const tween = gsap.to(el, {
-      x: -half,
-      duration: half / speed,
-      ease: "none",
-      repeat: -1,
-      modifiers: {
-        x: gsap.utils.unitize((x) => parseFloat(x) % half),
-      },
-    });
+    // xPercent loops seamlessly even if webfonts change the track width after mount
+    const tween = gsap.fromTo(
+      el,
+      { xPercent: 0 },
+      { xPercent: -50, duration: el.scrollWidth / 2 / speed, ease: "none", repeat: -1 }
+    );
 
     return () => {
       tween.kill();

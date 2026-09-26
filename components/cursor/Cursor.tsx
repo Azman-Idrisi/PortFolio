@@ -22,7 +22,7 @@ export function Cursor() {
     const onMove = (e: MouseEvent) => {
       x.set(e.clientX);
       y.set(e.clientY);
-      if (!visible) setVisible(true);
+      setVisible(true);
     };
     const onLeave = () => setVisible(false);
     const onEnter = () => setVisible(true);
@@ -39,18 +39,20 @@ export function Cursor() {
       else setVariant("default");
     };
 
+    document.documentElement.classList.add("has-custom-cursor");
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mouseover", onOver, { passive: true });
     document.addEventListener("mouseleave", onLeave);
     document.addEventListener("mouseenter", onEnter);
 
     return () => {
+      document.documentElement.classList.remove("has-custom-cursor");
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseover", onOver);
       document.removeEventListener("mouseleave", onLeave);
       document.removeEventListener("mouseenter", onEnter);
     };
-  }, [isFine, reduced, visible, x, y]);
+  }, [isFine, reduced, x, y]);
 
   if (!isFine || reduced) return null;
 
