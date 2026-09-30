@@ -6,10 +6,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion } from "motion/react";
 import { heroTaglines, heroMeta } from "@/data/content";
 import { Magnetic } from "@/hooks/useMagnetic";
-import { useParallax } from "@/hooks/useParallax";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { useMedia } from "@/hooks/useMedia";
 import { HeroParticles } from "@/components/hero/HeroParticles";
+import { HeroForest } from "@/components/hero/HeroForest";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -24,12 +23,7 @@ export function Hero() {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const taglineRef = useRef<HTMLParagraphElement | null>(null);
   const reduced = useReducedMotion();
-  const isDesktop = useMedia("(min-width: 768px)");
   const revealedRef = useRef(false);
-  useParallax(
-    ref,
-    !reduced && isDesktop
-  );
 
   useEffect(() => {
     const el = ref.current;
@@ -130,6 +124,7 @@ export function Hero() {
       ref={ref}
       className="relative w-full flex flex-col justify-start overflow-hidden pt-24 pb-16 md:pt-32 md:pb-20 px-6 md:px-10"
     >
+      <HeroForest />
       <HeroParticles />
 
       <div
@@ -137,14 +132,6 @@ export function Hero() {
         data-hero-content
         className="relative z-10 flex flex-col justify-start"
       >
-        <div
-          data-parallax="0.08"
-          aria-hidden
-          className="pointer-events-none absolute top-[30%] inset-x-0 text-center font-fraunces text-[28vw] leading-none text-paper/[0.03] select-none will-change-transform"
-        >
-          MA
-        </div>
-
         <div className="mx-auto w-full max-w-[1440px]">
           <div
             data-hero-anim="label"
@@ -153,7 +140,7 @@ export function Hero() {
             <span className="text-accent">●</span> Mohammad Azman / React Native & Full-Stack — India
           </div>
 
-          <h1 data-parallax="-0.05" className="mt-8 md:mt-12 font-fraunces text-paper font-light leading-[0.85] tracking-[-0.04em] will-change-transform">
+          <h1 className="mt-8 md:mt-12 font-fraunces text-paper font-light leading-[0.85] tracking-[-0.04em] will-change-transform">
             <span className="block overflow-hidden pr-1">
               <span
                 data-hero-anim="name-1"
@@ -172,7 +159,7 @@ export function Hero() {
             </span>
           </h1>
 
-          <div data-parallax="-0.08" className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-end">
+          <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-end">
             <p
               ref={taglineRef}
               data-hero-anim="tagline"
@@ -204,7 +191,7 @@ export function Hero() {
             </div>
           </div>
 
-          <div data-parallax="-0.1" className="mt-12 md:mt-16 flex items-center justify-between">
+          <div className="mt-12 md:mt-16 flex items-center justify-between">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

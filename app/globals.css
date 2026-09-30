@@ -360,3 +360,60 @@ html.has-custom-cursor,
 html.has-custom-cursor * {
   cursor: none !important;
 }
+
+/* Thread lamps — lit by ScrollLine when the thread tip passes them */
+.thread-lamp {
+  position: relative;
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in oklab, var(--color-accent) 45%, transparent);
+  background: var(--color-ink, #0b0b0b);
+  transition: background-color 0.5s ease, box-shadow 0.6s ease, border-color 0.5s ease;
+}
+.thread-lamp[data-lit] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  box-shadow:
+    0 0 6px 1px color-mix(in oklab, var(--color-accent) 80%, transparent),
+    0 0 22px 6px color-mix(in oklab, var(--color-accent) 30%, transparent);
+}
+
+/* Hero forest — parallax layers from HeroForest.tsx (SVGs: scripts/gen-forest.mjs) */
+.hero-forest-sky {
+  background:
+    radial-gradient(55% 40% at 50% 80%, rgb(70 120 95 / 0.13), transparent 70%),
+    linear-gradient(to bottom, var(--color-ink) 0%, #0a110e 50%, #0d1c15 82%);
+}
+.hero-forest-layer {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center bottom;
+}
+.hero-forest-fog {
+  position: absolute;
+  left: 0;
+  bottom: 12%;
+  width: 200%;
+  height: 34%;
+  background:
+    radial-gradient(22% 60% at 12% 55%, rgb(55 95 75 / 0.16), transparent 70%),
+    radial-gradient(18% 50% at 34% 45%, rgb(55 95 75 / 0.11), transparent 70%),
+    radial-gradient(25% 55% at 62% 60%, rgb(55 95 75 / 0.14), transparent 70%),
+    radial-gradient(20% 50% at 84% 50%, rgb(55 95 75 / 0.11), transparent 70%);
+  filter: blur(18px);
+  animation: hero-fog-drift 120s linear infinite;
+}
+@keyframes hero-fog-drift {
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-forest-fog { animation: none; }
+}
+/* Nav legibility on top, blend into the next section at the bottom. */
+.hero-forest-shade {
+  background:
+    linear-gradient(to bottom, var(--color-ink) 0%, transparent 22%, transparent 80%, var(--color-ink) 100%),
+    radial-gradient(120% 90% at 50% 40%, transparent 55%, rgb(10 10 11 / 0.55) 100%);
+}

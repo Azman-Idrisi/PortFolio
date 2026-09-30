@@ -6,15 +6,9 @@ import { ProjectRow } from "./ProjectRow";
 import { ProjectDrawer } from "./ProjectDrawer";
 import { SectionLabel } from "@/components/primitives/SectionLabel";
 import { useUrlSyncedProject } from "@/hooks/useUrlSyncedProject";
-import { useParallax } from "@/hooks/useParallax";
-import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { useMedia } from "@/hooks/useMedia";
 
 export function ProjectArchive() {
   const ref = useRef<HTMLElement | null>(null);
-  const reduced = useReducedMotion();
-  const isDesktop = useMedia("(min-width: 768px)");
-  useParallax(ref, !reduced && isDesktop);
   const projectIds = projects.map((p) => p.id);
   const { openId, setOpenId } = useUrlSyncedProject(projectIds);
 
@@ -43,7 +37,7 @@ export function ProjectArchive() {
           Selected work
         </SectionLabel>
 
-        <h2 data-parallax="-0.04" className="font-fraunces text-[clamp(40px,6vw,96px)] leading-[1] text-paper font-light tracking-[-0.03em] max-w-[18ch] mb-16 will-change-transform">
+        <h2 className="font-fraunces text-[clamp(40px,6vw,96px)] leading-[1] text-paper font-light tracking-[-0.03em] max-w-[18ch] mb-16 will-change-transform">
           An archive of things I&apos;ve built.
         </h2>
 

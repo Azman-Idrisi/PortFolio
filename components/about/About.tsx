@@ -7,9 +7,7 @@ import { aboutParagraph, aboutIdentity } from "@/data/content";
 import { SectionLabel } from "@/components/primitives/SectionLabel";
 import { Meta } from "@/components/primitives/Meta";
 import { HeroMarquee } from "@/components/hero/HeroMarquee";
-import { useParallax } from "@/hooks/useParallax";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { useMedia } from "@/hooks/useMedia";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -18,8 +16,6 @@ if (typeof window !== "undefined") {
 export function About() {
   const ref = useRef<HTMLDivElement | null>(null);
   const reduced = useReducedMotion();
-  const isDesktop = useMedia("(min-width: 768px)");
-  useParallax(ref, !reduced && isDesktop);
 
   useEffect(() => {
     const el = ref.current;
@@ -67,7 +63,7 @@ export function About() {
         </SectionLabel>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12">
-          <div className="md:col-span-7" data-parallax="-0.04">
+          <div className="md:col-span-7">
             <p
               data-about-anim
               className="font-fraunces text-[24px] md:text-[28px] lg:text-[32px] leading-[1.3] text-paper font-light tracking-[-0.01em]"

@@ -53,7 +53,7 @@ export function TechStack() {
     <section
       id="practice"
       ref={sectionRef}
-      className="relative w-full border-t border-line bg-ink"
+      className="relative w-full border-t border-line"
     >
       <div className="px-6 md:px-10 section-pad-y-sm"><div className="mx-auto max-w-[1440px]">
         <SectionLabel index="03" className="mb-12">

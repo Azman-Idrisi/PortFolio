@@ -265,7 +265,8 @@ export function Approach() {
                   {s.index}
                 </div>
 
-                <h3 className="approach-row-title md:col-span-3 md:flex md:items-center font-fraunces text-[28px] md:text-[36px] leading-[1.05] text-paper font-light tracking-[-0.02em]">
+                <h3 className="approach-row-title md:col-span-3 flex items-center gap-4 md:gap-5 font-fraunces text-[28px] md:text-[36px] leading-[1.05] text-paper font-light tracking-[-0.02em]">
+                  <span data-thread-lamp aria-hidden="true" className="thread-lamp" />
                   <span className="block">
                     {titleWords.map(({ seg, isSpace, key }) =>
                       isSpace ? (
