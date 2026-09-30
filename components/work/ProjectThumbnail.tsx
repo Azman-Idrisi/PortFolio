@@ -9,6 +9,9 @@ type ProjectThumbnailProps = {
   className?: string;
 };
 
+// Thumbnails come in mixed shapes (3:2, 4:3, ~2:1). The box takes each image's
+// natural aspect ratio instead of cropping it: width/height only seed a 3:2
+// placeholder ratio until the file loads (`height: auto` then uses the real one).
 export function ProjectThumbnail({ src, alt, className = "" }: ProjectThumbnailProps) {
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
@@ -28,15 +31,14 @@ export function ProjectThumbnail({ src, alt, className = "" }: ProjectThumbnailP
   }
 
   return (
-    <div
-      className={`relative w-full aspect-[4/3] border border-line bg-ink-2 overflow-hidden ${className}`}
-    >
+    <div className={`relative w-full border border-line bg-ink-2 overflow-hidden ${className}`}>
       <Image
         src={src}
         alt={alt}
-        fill
+        width={1500}
+        height={1000}
         sizes="(max-width: 768px) 100vw, 50vw"
-        className={`object-cover transition-opacity duration-500 ${
+        className={`block h-auto w-full transition-opacity duration-500 ${
           loaded ? "opacity-100" : "opacity-0"
         }`}
         onLoad={() => setLoaded(true)}

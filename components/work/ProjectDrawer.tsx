@@ -60,6 +60,7 @@ export function ProjectDrawer({ project, isOpen }: ProjectDrawerProps) {
       >
         <div className="md:col-span-6">
           <motion.div
+            data-drawer-thumb={project.id}
             initial={false}
             animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : 8 }}
             transition={{ duration: 0.5, ease: EASE, delay: isOpen ? 0.05 : 0 }}

@@ -417,3 +417,10 @@ html.has-custom-cursor * {
     linear-gradient(to bottom, var(--color-ink) 0%, transparent 22%, transparent 80%, var(--color-ink) 100%),
     radial-gradient(120% 90% at 50% 40%, transparent 55%, rgb(10 10 11 / 0.55) 100%);
 }
+
+/* SplitText masks (useSplitReveal) — room for descenders so "g", "y" don't clip. */
+.split-line-mask,
+.split-word-mask {
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}

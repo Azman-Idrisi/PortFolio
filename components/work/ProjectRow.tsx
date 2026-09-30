@@ -1,19 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion } from "motion/react";
 import { Project } from "@/data/projects";
 import { cn } from "@/utils/cn";
+import { scramble } from "@/lib/scramble";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 type ProjectRowProps = {
   project: Project;
   isOpen: boolean;
   onToggle: () => void;
+  /** Pointer entered the row (drives the archive's floating preview). */
+  onHover?: () => void;
   index: number;
 };
 
-export function ProjectRow({ project, isOpen, onToggle, index }: ProjectRowProps) {
+export function ProjectRow({ project, isOpen, onToggle, onHover, index }: ProjectRowProps) {
   const [hovered, setHovered] = useState(false);
+  const reduced = useReducedMotion();
+  const metaRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const meta = [project.category, project.role, project.year];
+
+  // Meta columns decode themselves on hover.
+  const handleEnter = () => {
+    setHovered(true);
+    onHover?.();
+    if (reduced) return;
+    metaRefs.current.forEach((el, i) => el && scramble(el, meta[i]));
+  };
 
   return (
     <motion.div
@@ -30,7 +45,7 @@ export function ProjectRow({ project, isOpen, onToggle, index }: ProjectRowProps
       <button
         type="button"
         onClick={onToggle}
-        onMouseEnter={() => setHovered(true)}
+        onMouseEnter={handleEnter}
         onMouseLeave={() => setHovered(false)}
         aria-expanded={isOpen}
         aria-controls={`project-drawer-${project.id}`}
@@ -50,15 +65,30 @@ export function ProjectRow({ project, isOpen, onToggle, index }: ProjectRowProps
           {project.name}
         </span>
 
-        <span className="hidden md:block col-span-2 font-mono text-[12px] uppercase tracking-[0.14em] text-paper-2">
+        <span
+          ref={(el) => {
+            metaRefs.current[0] = el;
+          }}
+          className="hidden md:block col-span-2 font-mono text-[12px] uppercase tracking-[0.14em] text-paper-2"
+        >
           {project.category}
         </span>
 
-        <span className="hidden md:block col-span-2 font-mono text-[12px] uppercase tracking-[0.14em] text-paper-2">
+        <span
+          ref={(el) => {
+            metaRefs.current[1] = el;
+          }}
+          className="hidden md:block col-span-2 font-mono text-[12px] uppercase tracking-[0.14em] text-paper-2"
+        >
           {project.role}
         </span>
 
-        <span className="hidden md:block col-span-1 text-right font-mono text-[12px] uppercase tracking-[0.14em] text-paper-2">
+        <span
+          ref={(el) => {
+            metaRefs.current[2] = el;
+          }}
+          className="hidden md:block col-span-1 text-right font-mono text-[12px] uppercase tracking-[0.14em] text-paper-2"
+        >
           {project.year}
         </span>
 

@@ -8,6 +8,7 @@ import { SectionLabel } from "@/components/primitives/SectionLabel";
 import { Meta } from "@/components/primitives/Meta";
 import { HeroMarquee } from "@/components/hero/HeroMarquee";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useSplitReveal } from "@/hooks/useSplitReveal";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -16,6 +17,7 @@ if (typeof window !== "undefined") {
 export function About() {
   const ref = useRef<HTMLDivElement | null>(null);
   const reduced = useReducedMotion();
+  useSplitReveal(ref, !reduced);
 
   useEffect(() => {
     const el = ref.current;
@@ -65,7 +67,8 @@ export function About() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12">
           <div className="md:col-span-7">
             <p
-              data-about-anim
+              data-split
+              data-split-start="top 80%"
               className="font-fraunces text-[24px] md:text-[28px] lg:text-[32px] leading-[1.3] text-paper font-light tracking-[-0.01em]"
             >
               {aboutParagraph}

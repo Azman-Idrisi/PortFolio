@@ -1,52 +1,20 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { socials, email, resumeUrl } from "@/data/socials";
 import { SectionLabel } from "@/components/primitives/SectionLabel";
 import { SocialIcon } from "@/components/primitives/SocialIcon";
 import { Magnetic } from "@/hooks/useMagnetic";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { useSplitReveal } from "@/hooks/useSplitReveal";
 
 export function Contact() {
   const ref = useRef<HTMLDivElement | null>(null);
-  const headlineRef = useRef<HTMLHeadingElement | null>(null);
   const reduced = useReducedMotion();
   const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    const el = ref.current;
-    const h = headlineRef.current;
-    if (!el || !h) return;
-
-    if (reduced) {
-      gsap.set(h, { opacity: 1, y: 0 });
-      return;
-    }
-
-    gsap.set(h, { opacity: 0, y: 40 });
-
-    ScrollTrigger.create({
-      trigger: el,
-      start: "top 70%",
-      once: true,
-      onEnter: () => {
-        gsap.to(h, { opacity: 1, y: 0, duration: 1.1, ease: "expo.out" });
-      },
-    });
-
-    return () => {
-      ScrollTrigger.getAll()
-        .filter((t) => t.trigger === el)
-        .forEach((t) => t.kill());
-    };
-  }, [reduced]);
+  useSplitReveal(ref, !reduced);
 
   const handleCopy = async () => {
     try {
@@ -69,9 +37,10 @@ export function Contact() {
           Contact
         </SectionLabel>
 
-        <div className="w-full flex justify-center will-change-transform">
+        <div className="w-full flex justify-center">
           <h2
-            ref={headlineRef}
+            data-split
+            data-split-start="top 75%"
             className="font-fraunces text-[clamp(56px,12vw,200px)] leading-[0.95] text-paper font-light tracking-[-0.04em] max-w-[14ch]"
           >
             Let&apos;s build something.

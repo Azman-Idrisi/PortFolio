@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { techPanels, techChips } from "@/data/content";
 import { SectionLabel } from "@/components/primitives/SectionLabel";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useSplitReveal } from "@/hooks/useSplitReveal";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -15,6 +16,7 @@ export function TechStack() {
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const reduced = useReducedMotion();
+  useSplitReveal(sectionRef, !reduced);
 
   useEffect(() => {
     if (reduced) return;
@@ -60,7 +62,7 @@ export function TechStack() {
           Practice
         </SectionLabel>
 
-        <h2 className="font-fraunces text-[clamp(40px,6vw,96px)] leading-[1] text-paper font-light tracking-[-0.03em] max-w-[18ch]">
+        <h2 data-split className="font-fraunces text-[clamp(40px,6vw,96px)] leading-[1] text-paper font-light tracking-[-0.03em] max-w-[18ch]">
           What I work with, day to day.
         </h2>
         </div>

@@ -6,23 +6,17 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { approachStages } from "@/data/approach";
 import { SectionLabel } from "@/components/primitives/SectionLabel";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useSplitReveal } from "@/hooks/useSplitReveal";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
-}
-
-function splitWords(text: string) {
-  return text.split(/(\s+)/).map((seg, i) => ({
-    seg,
-    isSpace: /^\s+$/.test(seg),
-    key: `${seg}-${i}`,
-  }));
 }
 
 export function Approach() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const railRef = useRef<HTMLDivElement | null>(null);
   const reduced = useReducedMotion();
+  useSplitReveal(sectionRef, !reduced);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -35,35 +29,12 @@ export function Approach() {
         y: 0,
         clipPath: "inset(0 0 0 0)",
       });
-      gsap.set(section.querySelectorAll(".approach-word"), {
-        yPercent: 0,
-      });
       if (rail) gsap.set(rail, { scaleX: 1 });
       return;
     }
 
-    // Headline words
-    const headlineWords = section.querySelectorAll<HTMLElement>(
-      ".approach-headline .approach-word"
-    );
-    gsap.set(headlineWords, { yPercent: 110 });
-
     const intro = section.querySelector<HTMLElement>(".approach-intro");
     const railEl = section.querySelector<HTMLElement>(".approach-rail");
-
-    ScrollTrigger.create({
-      trigger: section,
-      start: "top 80%",
-      once: true,
-      onEnter: () => {
-        gsap.to(headlineWords, {
-          yPercent: 0,
-          duration: 1.0,
-          stagger: 0.06,
-          ease: "expo.out",
-        });
-      },
-    });
 
     if (intro) {
       gsap.fromTo(
@@ -101,17 +72,13 @@ export function Approach() {
       );
     }
 
-    // Each row: index clip-reveal, title word-stagger, body + tools slide up
+    // Each row: index clip-reveal, body + tools slide up (title words: useSplitReveal)
     const rows = section.querySelectorAll<HTMLElement>(".approach-row");
     rows.forEach((row) => {
       const index = row.querySelector<HTMLElement>(".approach-index");
-      const titleWords = row.querySelectorAll<HTMLElement>(
-        ".approach-row-title .approach-word"
-      );
       const body = row.querySelector<HTMLElement>(".approach-body");
       const tools = row.querySelector<HTMLElement>(".approach-tools");
 
-      gsap.set(titleWords, { yPercent: 110 });
       if (index) gsap.set(index, { clipPath: "inset(0 100% 0 0)" });
       if (body) gsap.set(body, { opacity: 0, y: 16 });
       if (tools) gsap.set(tools, { opacity: 0, y: 16 });
@@ -135,16 +102,6 @@ export function Approach() {
           0
         );
       }
-      tl.to(
-        titleWords,
-        {
-          yPercent: 0,
-          duration: 0.9,
-          stagger: 0.035,
-          ease: "expo.out",
-        },
-        0.05
-      );
       if (body) {
         tl.to(
           body,
@@ -183,17 +140,12 @@ export function Approach() {
         .filter((t) => section.contains(t.trigger as Node | null))
         .forEach((t) => t.kill());
       // Reset the inline styles GSAP set on these elements
-      gsap.set(headlineWords, { clearProps: "transform" });
       if (intro) gsap.set(intro, { clearProps: "opacity,transform" });
       if (railEl) gsap.set(railEl, { clearProps: "transform" });
       rows.forEach((row) => {
         const index = row.querySelector<HTMLElement>(".approach-index");
-        const titleWords = row.querySelectorAll<HTMLElement>(
-          ".approach-row-title .approach-word"
-        );
         const body = row.querySelector<HTMLElement>(".approach-body");
         const tools = row.querySelector<HTMLElement>(".approach-tools");
-        gsap.set(titleWords, { clearProps: "transform" });
         if (index) gsap.set(index, { clearProps: "clipPath" });
         if (body) gsap.set(body, { clearProps: "opacity,transform" });
         if (tools) gsap.set(tools, { clearProps: "opacity,transform" });
@@ -201,8 +153,6 @@ export function Approach() {
       if (closer) gsap.set(closer, { clearProps: "opacity,transform" });
     };
   }, [reduced]);
-
-  const headlineWords = splitWords("How I build.");
 
   return (
     <section
@@ -222,25 +172,12 @@ export function Approach() {
         />
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 mb-16">
-          <h2 className="md:col-span-8 font-fraunces text-[clamp(40px,6vw,96px)] leading-[1] text-paper font-light tracking-[-0.03em] max-w-[18ch]">
-            <span className="approach-headline block">
-              <span className="block">
-                {headlineWords.map(({ seg, isSpace, key }) =>
-                  isSpace ? (
-                    <span key={key}>{seg}</span>
-                  ) : (
-                    <span
-                      key={key}
-                      className="inline-block overflow-hidden align-bottom pb-[0.12em] -mb-[0.12em]"
-                    >
-                      <span className="approach-word inline-block will-change-transform">
-                        {seg}
-                      </span>
-                    </span>
-                  )
-                )}
-              </span>
-            </span>
+          <h2
+            data-split
+            data-split-start="top 80%"
+            className="md:col-span-8 font-fraunces text-[clamp(40px,6vw,96px)] leading-[1] text-paper font-light tracking-[-0.03em] max-w-[18ch]"
+          >
+            How I build.
           </h2>
           <p
             data-approach-anim
@@ -253,7 +190,6 @@ export function Approach() {
 
         <ol className="border-t border-line">
           {approachStages.map((s, i) => {
-            const titleWords = splitWords(s.title);
             return (
               <li
                 key={s.id}
@@ -267,21 +203,8 @@ export function Approach() {
 
                 <h3 className="approach-row-title md:col-span-3 flex items-center gap-4 md:gap-5 font-fraunces text-[28px] md:text-[36px] leading-[1.05] text-paper font-light tracking-[-0.02em]">
                   <span data-thread-lamp aria-hidden="true" className="thread-lamp" />
-                  <span className="block">
-                    {titleWords.map(({ seg, isSpace, key }) =>
-                      isSpace ? (
-                        <span key={key}>{seg}</span>
-                      ) : (
-                        <span
-                          key={key}
-                          className="inline-block overflow-hidden align-bottom pb-[0.12em] -mb-[0.12em]"
-                        >
-                          <span className="approach-word inline-block will-change-transform">
-                            {seg}
-                          </span>
-                        </span>
-                      )
-                    )}
+                  <span data-split="words" data-split-start="top 82%" className="block">
+                    {s.title}
                   </span>
                 </h3>
 
